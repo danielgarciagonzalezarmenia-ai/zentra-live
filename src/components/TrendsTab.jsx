@@ -4,17 +4,22 @@ import { TrendingUp, Award, ExternalLink, Percent } from 'lucide-react';
 export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
   const trends = trendsData?.trends || [];
 
-  if (trends.length === 0) {
+  const getTrendRate = (t) => t.odds?.rate?.decimal || t.odds?.prematchRate?.decimal || 0;
+
+  // Filter out trends with rate < 1.40
+  const validTrends = trends.filter(t => getTrendRate(t) >= 1.40);
+
+  if (validTrends.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
         <TrendingUp size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
-        <p style={{ margin: 0, fontSize: '14px' }}>No hay tendencias disponibles para este partido.</p>
+        <p style={{ margin: 0, fontSize: '14px' }}>No hay tendencias de valor (+1.40) disponibles para este partido.</p>
       </div>
     );
   }
 
   // Sort trends by percentage confidence descending
-  const sortedTrends = [...trends].sort((a, b) => b.percentage - a.percentage);
+  const sortedTrends = [...validTrends].sort((a, b) => b.percentage - a.percentage);
 
   // Top Trends: confidence percentage >= 0.80, or top 2 if none meet threshold
   const topTrendsFilter = sortedTrends.filter(t => t.percentage >= 0.80);
@@ -30,7 +35,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
   const renderTrendCard = (t) => {
     const bookmaker = trendsData?.bookmakers?.find(b => b.id === t.bookmakerId);
     const betLink = t.odds?.link || bookmaker?.link || 'https://www.bet365.com';
-    const rateVal = t.odds?.rate?.decimal || t.odds?.prematchRate?.decimal;
+    const rateVal = getTrendRate(t);
 
     return (
       <div 
