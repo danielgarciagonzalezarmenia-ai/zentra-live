@@ -349,9 +349,9 @@ app.post('/api/create_preference', async (req, res) => {
           uid: uid // Guardamos el UID para saber a quién activar el premium
         },
         back_urls: {
-          success: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live',
-          failure: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live',
-          pending: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live'
+          success: 'https://zentracol.xyz',
+          failure: 'https://zentracol.xyz',
+          pending: 'https://zentracol.xyz'
         },
         auto_return: 'approved',
         notification_url: 'https://zentra-live-backend.onrender.com/api/webhook'
