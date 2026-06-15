@@ -3,6 +3,7 @@ const cors = require('cors');
 const axios = require('axios');
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 const admin = require('firebase-admin');
+const { getFirestore } = require('firebase-admin/firestore');
 const nodemailer = require('nodemailer');
 
 // ----------------------------------------------------
@@ -12,7 +13,7 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
     const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8'));
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
+      credential: admin.cert(serviceAccount)
     });
     console.log("Firebase Admin initialized successfully.");
   } catch (error) {
@@ -22,7 +23,7 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   console.warn("FIREBASE_SERVICE_ACCOUNT not set in environment.");
 }
 
-const dbAdmin = admin.apps.length ? admin.firestore() : null;
+const dbAdmin = admin.getApps().length ? getFirestore() : null;
 
 // ----------------------------------------------------
 // MERCADO PAGO SETUP
