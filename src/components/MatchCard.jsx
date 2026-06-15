@@ -39,7 +39,7 @@ export default function MatchCard({ game, competitionName, onClick }) {
 
   return (
     <div 
-      className="glass-panel" 
+      className={`glass-panel match-card-item ${isLive ? 'live' : ''}`}
       onClick={() => onClick(game.id)}
       style={{
         padding: '16px 20px',
@@ -48,20 +48,6 @@ export default function MatchCard({ game, competitionName, onClick }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         cursor: 'pointer',
-        transition: 'transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease',
-        border: '1px solid rgba(255, 255, 255, 0.05)',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.borderColor = isLive ? 'rgba(13, 240, 163, 0.3)' : 'rgba(255, 255, 255, 0.15)';
-        e.currentTarget.style.boxShadow = isLive 
-          ? '0 6px 20px rgba(13, 240, 163, 0.08)' 
-          : '0 6px 20px rgba(0, 0, 0, 0.4)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-        e.currentTarget.style.boxShadow = 'var(--glass-shadow)';
       }}
     >
       {/* Team Info (Left/Right) & Scores */}
@@ -120,7 +106,7 @@ export default function MatchCard({ game, competitionName, onClick }) {
         alignItems: 'flex-end', 
         justifyContent: 'center',
         paddingLeft: '20px',
-        borderLeft: '1px solid rgba(255, 255, 255, 0.05)',
+        borderLeft: '1px solid var(--border-color)',
         minWidth: '70px'
       }}>
         {isLive && (

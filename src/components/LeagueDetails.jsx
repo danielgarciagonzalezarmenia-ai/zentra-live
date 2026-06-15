@@ -108,7 +108,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '20px',
-          background: 'linear-gradient(180deg, rgba(15, 22, 38, 0.4) 0%, transparent 100%)'
+          background: 'linear-gradient(180deg, var(--bg-card) 0%, transparent 100%)'
         }}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
             <button 
@@ -117,7 +117,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '8px', 
-                background: 'rgba(255,255,255,0.02)', 
+                background: 'var(--border-color)', 
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
                 padding: '8px 16px', 
@@ -154,7 +154,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                 onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitions:default1.png/competitions/default1'; }}
               />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
+                <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
                   {competition.name || competition.longName}
                 </h2>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', marginTop: '2px' }}>
@@ -167,7 +167,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
 
         {/* Tab Selection */}
         {!loading && !error && (
-          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(15,22,38,0.3)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)' }}>
             <div style={{ display: 'flex', width: '100%', maxWidth: '800px' }}>
               <button
                 onClick={() => setActiveTab('standings')}
@@ -233,14 +233,14 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                     Object.keys(groupMap).map(gNum => {
                       const group = groupMap[gNum];
                       return (
-                        <div key={gNum} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div key={gNum} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--accent-emerald)', margin: 0 }}>
                             {group.name}
                           </h3>
                           <div style={{ overflowX: 'auto' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '450px' }}>
                               <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', color: 'var(--text-muted)', fontSize: '11px', fontWeight: '800' }}>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '11px', fontWeight: '800' }}>
                                   <th style={{ padding: '8px 4px', width: '30px' }}>#</th>
                                   <th style={{ padding: '8px 4px' }}>Equipo</th>
                                   <th style={{ padding: '8px 4px', textAlign: 'center', width: '35px' }}>PJ</th>
@@ -257,7 +257,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                                   return (
                                     <tr 
                                       key={row.competitor.id} 
-                                      style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '13px' }}
+                                      style={{ borderBottom: '1px solid var(--border-color)', fontSize: '13px' }}
                                     >
                                       <td style={{ padding: '10px 4px', color: 'var(--text-muted)', fontWeight: '700', ...destStyle }}>
                                         {row.position}
@@ -293,11 +293,11 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                     })
                   ) : (
                     // Render Single Table (e.g. League)
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
                       <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '550px' }}>
                           <thead>
-                            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', color: 'var(--text-muted)', fontSize: '11px', fontWeight: '800' }}>
+                            <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '11px', fontWeight: '800' }}>
                               <th style={{ padding: '8px 4px', width: '30px' }}>#</th>
                               <th style={{ padding: '8px 4px' }}>Equipo</th>
                               <th style={{ padding: '8px 4px', textAlign: 'center', width: '40px' }}>PJ</th>
@@ -315,7 +315,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                               return (
                                 <tr 
                                   key={row.competitor.id} 
-                                  style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '13px' }}
+                                  style={{ borderBottom: '1px solid var(--border-color)', fontSize: '13px' }}
                                 >
                                   <td style={{ padding: '12px 4px', color: 'var(--text-muted)', fontWeight: '700', ...destStyle }}>
                                     {row.position}
@@ -352,7 +352,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
 
                   {/* Destinations Legend */}
                   {destinations.length > 0 && (
-                    <div className="glass-panel" style={{ padding: '14px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className="glass-panel" style={{ padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Zonas de Clasificación</span>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
                         {destinations.map(dest => (
@@ -370,21 +370,21 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
               {activeTab === 'stats' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {athletesStats.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>Estadísticas no disponibles para este torneo.</p>
                     </div>
                   ) : (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                       {athletesStats.slice(0, 6).map((category, idx) => (
-                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                          <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
+                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                             {category.name}
                           </h4>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                             {category.rows?.slice(0, 5).map((row, rIdx) => (
                               <div 
                                 key={row.entity.id} 
-                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', padding: '4px 0', borderBottom: rIdx < 4 ? '1px solid rgba(255,255,255,0.02)' : 'none' }}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '13px', padding: '4px 0', borderBottom: rIdx < 4 ? '1px solid var(--border-color)' : 'none' }}
                               >
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                   <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '700', width: '15px' }}>{rIdx + 1}</span>

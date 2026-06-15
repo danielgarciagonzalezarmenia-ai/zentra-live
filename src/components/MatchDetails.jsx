@@ -81,7 +81,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
           flexDirection: 'column', 
           gap: '20px', 
           position: 'relative',
-          background: 'linear-gradient(180deg, rgba(15, 22, 38, 0.4) 0%, transparent 100%)'
+          background: 'linear-gradient(180deg, var(--bg-card) 0%, transparent 100%)'
         }}>
           {/* Top Bar (Back Button & Category Tag) */}
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto' }}>
@@ -91,7 +91,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '8px', 
-                background: 'rgba(255,255,255,0.02)', 
+                background: 'var(--border-color)', 
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
                 padding: '8px 16px', 
@@ -103,11 +103,11 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.background = 'var(--border-color)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--border-color)';
-                e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                e.currentTarget.style.background = 'var(--border-color)';
               }}
             >
               ← Volver
@@ -154,7 +154,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
                     fontSize: '40px', 
                     fontWeight: '900', 
                     letterSpacing: '6px', 
-                    color: '#ffffff', 
+                    color: 'var(--text-primary)', 
                     fontFamily: "'Outfit', sans-serif",
                     textShadow: '0 0 20px rgba(255,255,255,0.1)'
                   }}>
@@ -162,9 +162,9 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
                   </div>
                   <span style={{ 
                     fontSize: '11px', 
-                    background: game.statusGroup === 3 ? 'rgba(13, 240, 163, 0.15)' : 'rgba(255,255,255,0.06)', 
+                    background: game.statusGroup === 3 ? 'rgba(13, 240, 163, 0.15)' : 'var(--border-color)', 
                     color: game.statusGroup === 3 ? 'var(--accent-emerald)' : 'var(--text-secondary)', 
-                    border: game.statusGroup === 3 ? '1px solid rgba(13, 240, 163, 0.3)' : '1px solid rgba(255,255,255,0.08)',
+                    border: game.statusGroup === 3 ? '1px solid rgba(13, 240, 163, 0.3)' : '1px solid var(--border-color)',
                     padding: '4px 12px', 
                     borderRadius: '12px', 
                     marginTop: '8px', 
@@ -194,7 +194,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
 
         {/* Tab Selection Bar */}
         {gameDetails && !loading && (
-          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(15,22,38,0.3)', backdropFilter: 'var(--glass-blur)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)', backdropFilter: 'var(--glass-blur)' }}>
             <div style={{ display: 'flex', width: '100%', maxWidth: '800px' }}>
               {[
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },

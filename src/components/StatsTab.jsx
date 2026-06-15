@@ -70,7 +70,7 @@ export default function StatsTab({ statsList, homeId, awayId }) {
             </div>
 
             {/* Custom Dual Progress Bar */}
-            <div style={{ height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', display: 'flex', overflow: 'hidden', width: '100%' }}>
+            <div style={{ height: '8px', background: 'var(--border-color)', borderRadius: '4px', display: 'flex', overflow: 'hidden', width: '100%' }}>
               {/* Home Bar (Fills from right to left inside its half) */}
               <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', borderRight: '1px solid var(--bg-secondary)' }}>
                 <div style={{ 

@@ -1,15 +1,16 @@
 :root {
-  --bg-primary: #070a13;
-  --bg-secondary: #0f1626;
-  --bg-card: rgba(15, 22, 38, 0.65);
-  --border-color: rgba(255, 255, 255, 0.06);
+  /* Dark Mode (Default) - Vibrant & Premium */
+  --bg-primary: #05070f;
+  --bg-secondary: #0d1221;
+  --bg-card: rgba(13, 18, 33, 0.7);
+  --border-color: rgba(255, 255, 255, 0.08);
   
   --accent-emerald: #0df0a3;
   --accent-cyan: #0dcaf0;
   --accent-blue: #3b82f6;
   --accent-purple: #8b5cf6;
   
-  --text-primary: #f8f9fa;
+  --text-primary: #ffffff;
   --text-secondary: #cbd5e1;
   --text-muted: #64748b;
   
@@ -17,14 +18,43 @@
   --warning: #f59e0b;
   --danger: #ef4444;
   
-  --glass-blur: blur(16px);
-  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-blur: blur(20px);
+  --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  --aura-emerald: rgba(13, 240, 163, 0.12);
+  --aura-cyan: rgba(13, 202, 240, 0.12);
   
   font-family: 'Inter', sans-serif;
   color-scheme: dark;
   background-color: var(--bg-primary);
   color: var(--text-primary);
+}
+
+:root[data-theme='light'] {
+  /* Light Mode - Clean, Bright & Premium */
+  --bg-primary: #f1f5f9;
+  --bg-secondary: #e2e8f0;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --border-color: rgba(0, 0, 0, 0.06);
+  
+  --accent-emerald: #059669; /* Darker for better contrast */
+  --accent-cyan: #0284c7;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  
+  --glass-blur: blur(24px);
+  --glass-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.05);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+  
+  --aura-emerald: rgba(5, 150, 105, 0.1);
+  --aura-cyan: rgba(2, 132, 199, 0.1);
+  
+  color-scheme: light;
 }
 
 body {
@@ -34,33 +64,36 @@ body {
   overflow-x: hidden;
   background-color: var(--bg-primary);
   position: relative;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* Background Ambient Auras (Mesh Gradients) */
 body::before {
   content: "";
   position: fixed;
-  top: -150px;
-  left: -150px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(13, 240, 163, 0.09) 0%, transparent 70%);
-  filter: blur(80px);
+  top: -20vh;
+  left: -20vw;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(circle, var(--aura-emerald) 0%, transparent 70%);
+  filter: blur(100px);
   z-index: -2;
   pointer-events: none;
+  transition: background 0.4s ease;
 }
 
 body::after {
   content: "";
   position: fixed;
-  bottom: -150px;
-  right: -150px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(13, 202, 240, 0.09) 0%, transparent 70%);
-  filter: blur(80px);
+  bottom: -20vh;
+  right: -20vw;
+  width: 60vw;
+  height: 60vh;
+  background: radial-gradient(circle, var(--aura-cyan) 0%, transparent 70%);
+  filter: blur(100px);
   z-index: -2;
   pointer-events: none;
+  transition: background 0.4s ease;
 }
 
 /* Custom Scrollbar */
@@ -96,6 +129,23 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--glass-shadow);
   border-radius: 20px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Match Card Styles */
+.match-card-item {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border-color);
+}
+
+.match-card-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--text-muted);
+  box-shadow: var(--glass-shadow);
+}
+
+.match-card-item.live:hover {
+  border-color: var(--accent-emerald);
+  box-shadow: 0 6px 20px var(--aura-emerald);
 }
 
 /* Pulsing active animations */
@@ -366,3 +416,22 @@ h1, h2, h3, h4, h5, h6 {
   animation: skeleton-glow 1.4s infinite ease-in-out;
   border-radius: 12px;
 }
+
+/* Mobile Optimizations */
+@media (max-width: 600px) {
+  .date-slider button {
+    min-width: 50px !important;
+    padding: 6px 8px !important;
+  }
+  .drawer-content {
+    border-radius: 0;
+  }
+  .match-card-item {
+    margin: 0 8px 10px 8px !important;
+    padding: 12px 16px !important;
+  }
+  .league-header-click {
+    padding: 8px 12px !important;
+  }
+}
+

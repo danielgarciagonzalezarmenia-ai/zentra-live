@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown } from 'lucide-react';
+import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown, Sun, Moon } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
@@ -17,7 +17,9 @@ export default function Header({
   user,
   authLoading,
   onLogin,
-  onLogout
+  onLogout,
+  theme,
+  toggleTheme
 }) {
   const fileInputRef = useRef(null);
 
@@ -133,7 +135,7 @@ export default function Header({
               onFocus={() => setShowDropdown(true)}
               style={{
                 width: '100%',
-                background: 'rgba(255, 255, 255, 0.02)',
+                background: 'var(--border-color)',
                 border: '1px solid var(--border-color)',
                 borderRadius: '12px',
                 padding: '8px 12px 8px 32px',
@@ -166,8 +168,8 @@ export default function Header({
               maxHeight: '300px',
               overflowY: 'auto',
               borderRadius: '14px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              background: 'rgba(11, 15, 25, 0.96)',
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-card)',
               backdropFilter: 'blur(20px)',
               boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
               zIndex: 1000,
@@ -244,7 +246,7 @@ export default function Header({
                           style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
                           className="search-item"
                         >
-                          <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', display: 'flex', alignItems: 'center', justify: 'center', fontSize: '8px', fontWeight: '900', color: '#0b0f19' }}>
+                          <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', display: 'flex', alignItems: 'center', justify: 'center', fontSize: '8px', fontWeight: '900', color: 'var(--bg-primary)' }}>
                             {player.name ? player.name[0].toUpperCase() : '?'}
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -308,6 +310,27 @@ export default function Header({
             <RefreshCw size={16} className={loading ? 'skeleton' : ''} style={{ animation: loading ? 'skeleton-glow 1s infinite' : 'none' }} />
           </button>
 
+          {/* Theme Toggle Button */}
+          <button 
+            onClick={toggleTheme}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              border: '1px solid var(--border-color)',
+              background: 'var(--border-color)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            title="Cambiar tema"
+          >
+            {theme === 'dark' ? <Sun size={16} color="var(--warning)" /> : <Moon size={16} color="var(--accent-blue)" />}
+          </button>
+
           {/* Firebase Authentication Area */}
           {authLoading ? (
             <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
@@ -324,7 +347,7 @@ export default function Header({
                   height: '36px',
                   borderRadius: '50%',
                   border: user.isPremium ? '2px solid var(--warning)' : '1px solid var(--border-color)',
-                  background: 'linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255,255,255,0.02) 100%)',
+                  background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100%)',
                   padding: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -376,8 +399,8 @@ export default function Header({
                   right: 0,
                   width: '260px',
                   borderRadius: '16px',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  background: 'rgba(11, 15, 25, 0.98)',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--bg-card)',
                   backdropFilter: 'blur(20px)',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
                   zIndex: 1000,
@@ -426,7 +449,7 @@ export default function Header({
                     borderRadius: '12px',
                     background: user.isPremium 
                       ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)' 
-                      : 'rgba(255, 255, 255, 0.02)',
+                      : 'var(--border-color)',
                     border: user.isPremium 
                       ? '1px solid rgba(245, 158, 11, 0.3)' 
                       : '1px solid var(--border-color)',
@@ -532,7 +555,7 @@ export default function Header({
                   padding: '8px 12px',
                   borderRadius: '12px',
                   border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid transparent',
-                  background: isSelected ? 'rgba(13, 240, 163, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                  background: isSelected ? 'rgba(13, 240, 163, 0.08)' : 'var(--border-color)',
                   color: isSelected ? 'var(--accent-emerald)' : 'var(--text-secondary)',
                   cursor: 'pointer',
                   display: 'flex',
@@ -549,7 +572,7 @@ export default function Header({
                   {d.getDate()}
                 </span>
                 {isToday && (
-                  <span style={{ fontSize: '7px', fontWeight: '800', background: 'var(--bg-secondary)', padding: '2px 4px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <span style={{ fontSize: '7px', fontWeight: '800', background: 'var(--bg-secondary)', padding: '2px 4px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
                     HOY
                   </span>
                 )}
@@ -567,7 +590,7 @@ export default function Header({
               height: '45px',
               borderRadius: '12px',
               border: '1px solid var(--border-color)',
-              background: 'rgba(255, 255, 255, 0.02)',
+              background: 'var(--border-color)',
               color: 'var(--text-secondary)',
               cursor: 'pointer',
               display: 'flex',

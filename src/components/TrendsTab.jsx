@@ -38,7 +38,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
         className="glass-panel" 
         style={{ 
           padding: '16px 20px', 
-          border: '1px solid rgba(255,255,255,0.04)', 
+          border: '1px solid var(--border-color)', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between', 
@@ -49,10 +49,10 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-          e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+          e.currentTarget.style.background = 'var(--border-color)';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.04)';
+          e.currentTarget.style.borderColor = 'var(--border-color)';
           e.currentTarget.style.background = 'rgba(255,255,255,0.01)';
         }}
       >
@@ -105,8 +105,8 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
               gap: '12px',
               padding: '10px 16px',
               borderRadius: '12px',
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid rgba(255,255,255,0.06)',
+              background: 'var(--border-color)',
+              border: '1px solid var(--border-color)',
               textDecoration: 'none',
               transition: 'all 0.2s ease',
               minWidth: '140px',
@@ -117,8 +117,8 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
               e.currentTarget.style.background = 'rgba(13,240,163,0.05)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
-              e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
+              e.currentTarget.style.background = 'var(--border-color)';
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -130,7 +130,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
                 {renderTrendIcon(t.odds?.trend)}
               </span>
             </div>
-            <div style={{ padding: '6px', background: 'rgba(255,255,255,0.04)', borderRadius: '8px', color: 'var(--text-secondary)' }}>
+            <div style={{ padding: '6px', background: 'var(--border-color)', borderRadius: '8px', color: 'var(--text-secondary)' }}>
               <ExternalLink size={12} />
             </div>
           </a>

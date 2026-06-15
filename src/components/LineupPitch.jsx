@@ -134,7 +134,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
       <div style={{ flex: '1.2', minWidth: '320px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
         {/* Selector de Equipo */}
-        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: '4px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: '4px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
           <button
             onClick={() => setSelectedTeamId(homeId)}
             style={{
@@ -182,14 +182,14 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
         </div>
 
         {/* Formations & Coaches Header */}
-        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', fontSize: '13px', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.01)' }}>
+        <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '16px', fontSize: '13px', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.01)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <span style={{ color: 'var(--text-muted)', fontWeight: '700', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Formación táctica</span>
             <strong style={{ color: 'var(--text-primary)', fontSize: '14px' }}>
               {selectedTeamId === homeId ? (homeLineup.formation || 'N/A') : (awayLineup.formation || 'N/A')}
             </strong>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '8px' }}>
             <span style={{ color: 'var(--text-muted)', fontWeight: '700', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Director Técnico</span>
             <strong 
               onClick={() => {
@@ -237,7 +237,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {selectedTeamId === homeId ? (
             <div>
-              <h5 style={{ fontSize: '12px', color: 'var(--accent-emerald)', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px', fontWeight: '700' }}>
+              <h5 style={{ fontSize: '12px', color: 'var(--accent-emerald)', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px', fontWeight: '700' }}>
                 {gameDetails.game?.homeCompetitor?.name}
               </h5>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -264,7 +264,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
             </div>
           ) : (
             <div>
-              <h5 style={{ fontSize: '12px', color: 'var(--accent-cyan)', marginBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '4px', fontWeight: '700' }}>
+              <h5 style={{ fontSize: '12px', color: 'var(--accent-cyan)', marginBottom: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '4px', fontWeight: '700' }}>
                 {gameDetails.game?.awayCompetitor?.name}
               </h5>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

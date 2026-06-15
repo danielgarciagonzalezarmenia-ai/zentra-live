@@ -294,7 +294,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
               display: 'flex', 
               alignItems: 'center', 
               gap: '8px', 
-              background: 'rgba(255,255,255,0.02)', 
+              background: 'var(--border-color)', 
               border: '1px solid var(--border-color)', 
               color: 'var(--text-secondary)', 
               padding: '8px 16px', 
@@ -324,7 +324,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
 
         {/* Tab Selection */}
         {player && !loading && (
-          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(15,22,38,0.3)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)' }}>
             <div style={{ display: 'flex', width: '100%', maxWidth: '800px' }}>
               {[
                 { id: 'profile', name: 'Perfil', icon: <User size={14} /> },
@@ -381,7 +381,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
               {activeTab === 'profile' && (
                 <>
                   {/* Player Card (Ficha Cromo) */}
-                  <div className="glass-panel" style={{ padding: '24px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'linear-gradient(135deg, rgba(13,240,163,0.02) 0%, rgba(13,202,240,0.02) 100%)', position: 'relative', overflow: 'hidden' }}>
+                  <div className="glass-panel" style={{ padding: '24px', borderRadius: '24px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'linear-gradient(135deg, rgba(13,240,163,0.02) 0%, rgba(13,202,240,0.02) 100%)', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '80px', height: '80px', background: 'var(--accent-cyan)', filter: 'blur(40px)', opacity: 0.1, pointerEvents: 'none' }} />
                     
                     {/* Player Photo Avatar */}
@@ -396,13 +396,13 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       boxShadow: '0 8px 24px rgba(13, 240, 163, 0.2)',
                       border: '2px solid rgba(255,255,255,0.1)'
                     }}>
-                      <span style={{ fontSize: '24px', fontWeight: '900', color: '#0b0f19', fontFamily: "'Outfit', sans-serif" }}>
+                      <span style={{ fontSize: '24px', fontWeight: '900', color: 'var(--bg-primary)', fontFamily: "'Outfit', sans-serif" }}>
                         {getPlayerInitials(player.name)}
                       </span>
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', textAlign: 'center' }}>
-                      <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
+                      <h2 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
                         {player.name}
                       </h2>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--accent-cyan)', fontWeight: '700' }}>
@@ -423,7 +423,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       gridTemplateColumns: '1fr 1fr',
                       gap: '12px',
                       background: 'rgba(255,255,255,0.01)',
-                      border: '1px solid rgba(255,255,255,0.02)',
+                      border: '1px solid var(--border-color)',
                       borderRadius: '16px',
                       padding: '16px',
                       boxSizing: 'border-box'
@@ -448,8 +448,8 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   </div>
 
                   {/* Summary Statistics Card */}
-                  <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                    <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                    <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Activity size={12} color="var(--accent-emerald)" /> Resumen de Rendimiento
                     </h3>
                     {loadingExtra ? (
@@ -458,7 +458,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', textAlign: 'center' }}>
                         <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>PARTIDOS</span>
-                          <strong style={{ fontSize: '16px', color: '#ffffff' }}>{totalGames}</strong>
+                          <strong style={{ fontSize: '16px', color: 'var(--text-primary)' }}>{totalGames}</strong>
                         </div>
                         <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>GOLES</span>
@@ -478,8 +478,8 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
 
                   {/* Dynamically Fetched Next Game */}
                   {nextMatch && (
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.03)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0, borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0, borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Clock size={12} color="var(--accent-cyan)" /> Próximo Partido
                       </h3>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }} onClick={() => onOpenModal('match', nextMatch.id)}>
@@ -506,7 +506,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       {club && (
                         <div 
                           className="glass-panel" 
-                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                           onClick={() => onOpenModal('team', club.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -523,7 +523,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       {nationalTeam && (
                         <div 
                           className="glass-panel" 
-                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                           onClick={() => onOpenModal('team', nationalTeam.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -541,13 +541,13 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
 
                   {/* Transfer History (Fichajes) */}
                   {transfers.length > 0 && (
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.03)' }}>
-                      <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '6px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                      <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Award size={12} color="var(--accent-emerald)" /> Historial de Fichajes
                       </h3>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         {transfers.map((t, idx) => (
-                          <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', borderBottom: idx < transfers.length - 1 ? '1px solid rgba(255,255,255,0.02)' : 'none', paddingBottom: '8px' }}>
+                          <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', borderBottom: idx < transfers.length - 1 ? '1px solid var(--border-color)' : 'none', paddingBottom: '8px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                               <strong style={{ color: 'var(--text-primary)', fontSize: '12px' }}>{t.to}</strong>
                               <span style={{ color: 'var(--text-muted)', fontSize: '10px' }}>Desde: {t.from}</span>
@@ -570,7 +570,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   {loadingExtra ? (
                     <div className="skeleton" style={{ height: '80px', width: '100%' }} />
                   ) : athleteGames.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay historial de partidos reciente cargado para este jugador.</p>
                     </div>
                   ) : (
@@ -594,7 +594,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                           style={{
                             padding: '14px 20px',
                             borderRadius: '16px',
-                            border: '1px solid rgba(255,255,255,0.03)',
+                            border: '1px solid var(--border-color)',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '8px',
@@ -624,7 +624,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                           </div>
 
                           {/* Player Performance stats */}
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.03)', paddingTop: '8px', marginTop: '4px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border-color)', paddingTop: '8px', marginTop: '4px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
                               {!playedVal ? (
                                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontStyle: 'italic' }}>No jugó</span>
@@ -685,21 +685,21 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   {loadingExtra ? (
                     <div className="skeleton" style={{ height: '150px', width: '100%' }} />
                   ) : Object.keys(statsByComp).length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay estadísticas disponibles para este jugador.</p>
                     </div>
                   ) : (
                     Object.values(statsByComp).map((comp, idx) => {
                       const cAvgRating = comp.ratingCount > 0 ? (comp.ratingSum / comp.ratingCount).toFixed(2) : 'N/A';
                       return (
-                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                          <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '8px' }}>
+                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                             {comp.name}
                           </h4>
                           <div style={{ overflowX: 'auto' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', minWidth: '400px' }}>
                               <thead>
-                                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', color: 'var(--text-muted)', fontSize: '10px', fontWeight: '800' }}>
+                                <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)', fontSize: '10px', fontWeight: '800' }}>
                                   <th style={{ padding: '6px 4px', textAlign: 'left' }}>PJ</th>
                                   <th style={{ padding: '6px 4px' }}>Min</th>
                                   <th style={{ padding: '6px 4px', color: 'var(--accent-emerald)' }}>Goles</th>
@@ -711,7 +711,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                               </thead>
                               <tbody>
                                 <tr style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                                  <td style={{ padding: '8px 4px', fontWeight: '700', color: '#ffffff', textAlign: 'left' }}>{comp.gamesPlayed}</td>
+                                  <td style={{ padding: '8px 4px', fontWeight: '700', color: 'var(--text-primary)', textAlign: 'left' }}>{comp.gamesPlayed}</td>
                                   <td style={{ padding: '8px 4px' }}>{comp.minutes}</td>
                                   <td style={{ padding: '8px 4px', fontWeight: '700', color: 'var(--accent-emerald)' }}>{comp.goals}</td>
                                   <td style={{ padding: '8px 4px', fontWeight: '700', color: 'var(--accent-cyan)' }}>{comp.assists}</td>

@@ -155,7 +155,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
           display: 'flex', 
           flexDirection: 'column', 
           gap: '20px',
-          background: 'linear-gradient(180deg, rgba(15, 22, 38, 0.4) 0%, transparent 100%)'
+          background: 'linear-gradient(180deg, var(--bg-card) 0%, transparent 100%)'
         }}>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', maxWidth: '800px', margin: '0 auto' }}>
             <button 
@@ -164,7 +164,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                 display: 'flex', 
                 alignItems: 'center', 
                 gap: '8px', 
-                background: 'rgba(255,255,255,0.02)', 
+                background: 'var(--border-color)', 
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
                 padding: '8px 16px', 
@@ -198,8 +198,8 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                 width: '70px',
                 height: '70px',
                 borderRadius: '16px',
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
+                background: 'var(--border-color)',
+                border: '1px solid var(--border-color)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -214,7 +214,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                 />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <h2 style={{ fontSize: '22px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
+                <h2 style={{ fontSize: '22px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
                   {competitor.longName || competitor.name}
                 </h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--text-muted)', fontWeight: '700' }}>
@@ -233,7 +233,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
 
         {/* Tab Selection */}
         {!loading && !error && (
-          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'rgba(15,22,38,0.3)' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)' }}>
             <div style={{ display: 'flex', width: '100%', maxWidth: '800px' }}>
               <button
                 onClick={() => setActiveTab('games')}
@@ -295,7 +295,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
               {activeTab === 'games' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {sortedGames.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay partidos programados o recientes para este equipo.</p>
                     </div>
                   ) : (
@@ -327,7 +327,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                           style={{
                             padding: '14px 20px',
                             borderRadius: '14px',
-                            border: '1px solid rgba(255,255,255,0.03)',
+                            border: '1px solid var(--border-color)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
@@ -366,7 +366,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                                 width: '22px',
                                 height: '22px',
                                 borderRadius: '6px',
-                                background: 'rgba(255,255,255,0.02)',
+                                background: 'var(--border-color)',
                                 border: `1px solid ${resultColor}`,
                                 color: resultColor,
                                 display: 'flex',
@@ -390,7 +390,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
               {activeTab === 'squad' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   {positions.length === 0 || players.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>Plantilla no disponible para este equipo.</p>
                     </div>
                   ) : (
@@ -398,7 +398,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                       const posData = playersByPosition[pos.id];
                       return (
                         <div key={pos.id} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                          <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid rgba(255,255,255,0.04)', paddingBottom: '6px' }}>
+                          <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px' }}>
                             {posData.title}
                           </h3>
                           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '12px' }}>
@@ -409,7 +409,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                                 style={{
                                   padding: '12px 16px',
                                   borderRadius: '12px',
-                                  border: '1px solid rgba(255,255,255,0.03)',
+                                  border: '1px solid var(--border-color)',
                                   display: 'flex',
                                   alignItems: 'center',
                                   justifyContent: 'space-between',
@@ -418,7 +418,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                                 }}
                                 onClick={() => onOpenModal('player', player.id)}
                                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.03)'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border-color)'; }}
                               >
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden' }}>
                                   <strong style={{ fontSize: '13px', color: 'var(--text-primary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }} className="hover-underline">
@@ -429,7 +429,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                                   </span>
                                 </div>
                                 {player.jerseyNum && (
-                                  <div style={{ fontSize: '16px', fontWeight: '900', color: 'rgba(255,255,255,0.08)', fontFamily: "'Outfit', sans-serif" }}>
+                                  <div style={{ fontSize: '16px', fontWeight: '900', color: 'var(--border-color)', fontFamily: "'Outfit', sans-serif" }}>
                                     #{player.jerseyNum}
                                   </div>
                                 )}

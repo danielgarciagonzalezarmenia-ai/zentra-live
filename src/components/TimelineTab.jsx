@@ -76,7 +76,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
 
     if (id === 1 || type.includes('gol') || type.includes('goal')) {
       return (
-        <div style={{ color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Gol">
+        <div style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Gol">
           <SoccerBallIcon />
         </div>
       );
@@ -189,7 +189,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
       
       {/* 2. Events Timeline */}
       {sortedEvents.length === 0 ? (
-        <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px' }}>
+        <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
           <p style={{ margin: 0, fontSize: '13px', fontWeight: '500' }}>Línea de tiempo no disponible o sin eventos aún.</p>
         </div>
       ) : (
@@ -202,7 +202,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
             left: '50%',
             transform: 'translateX(-50%)',
             width: '2px',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            backgroundColor: 'var(--border-color)',
             zIndex: 1
           }} />
 
@@ -232,7 +232,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                   pointerEvents: isHome ? 'auto' : 'none'
                 }}>
                   {isHome && (
-                    <div className="glass-panel" style={{ padding: '10px 14px', border: '1px solid rgba(255,255,255,0.03)', maxWidth: '80%', borderRadius: '12px' }}>
+                    <div className="glass-panel" style={{ padding: '10px 14px', border: '1px solid var(--border-color)', maxWidth: '80%', borderRadius: '12px' }}>
                       {getEventContent(event)}
                     </div>
                   )}
@@ -265,7 +265,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                   pointerEvents: isHome ? 'none' : 'auto'
                 }}>
                   {!isHome && (
-                    <div className="glass-panel" style={{ padding: '10px 14px', border: '1px solid rgba(255,255,255,0.03)', maxWidth: '80%', borderRadius: '12px' }}>
+                    <div className="glass-panel" style={{ padding: '10px 14px', border: '1px solid var(--border-color)', maxWidth: '80%', borderRadius: '12px' }}>
                       {getEventContent(event)}
                     </div>
                   )}
@@ -282,7 +282,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                   background: 'var(--bg-primary)',
                   padding: '2px 6px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  border: '1px solid var(--border-color)',
                   pointerEvents: 'none'
                 }}>
                   {gameTimeStr}
@@ -296,7 +296,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
 
       {/* 1. Styled Summary Card */}
       {gameDetails?.game && (
-        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.01)' }}>
+        <div className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px', border: '1px solid var(--border-color)', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.01)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
             <Info size={16} color="var(--accent-emerald)" />
             <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.8px' }}>Detalles del Encuentro</h3>
@@ -350,7 +350,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                   {gameDetails.game.tvNetworks && gameDetails.game.tvNetworks.length > 0 ? (
                     gameDetails.game.tvNetworks.map(tv => (
-                      <span key={tv.id} style={{ background: 'rgba(255,255,255,0.04)', padding: '2px 8px', borderRadius: '6px', fontSize: '10px', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.04)', fontWeight: '600' }}>
+                      <span key={tv.id} style={{ background: 'var(--border-color)', padding: '2px 8px', borderRadius: '6px', fontSize: '10px', color: 'var(--text-secondary)', border: '1px solid var(--border-color)', fontWeight: '600' }}>
                         {tv.name}
                       </span>
                     ))
@@ -405,19 +405,19 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
             </div>
 
             {/* Jugador Clave */}
-            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', gridColumn: '1 / -1', borderTop: '1px solid rgba(255,255,255,0.04)', paddingTop: '16px', marginTop: '4px' }}>
+            <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', gridColumn: '1 / -1', borderTop: '1px solid var(--border-color)', paddingTop: '16px', marginTop: '4px' }}>
               <div style={{ padding: '8px', background: 'rgba(6,182,212,0.06)', borderRadius: '10px', color: 'var(--accent-cyan)' }}>
                 <Star size={16} />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', width: '100%' }}>
                 <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Jugadores Destacados</span>
                 <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.02)', padding: '6px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--border-color)', padding: '6px 12px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-emerald)' }} />
                     <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{gameDetails.game.homeCompetitor?.name}:</span>
                     <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{getKeyPlayer(gameDetails.game.homeCompetitor?.id, true)}</strong>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.02)', padding: '6px 12px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.04)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--border-color)', padding: '6px 12px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-cyan)' }} />
                     <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{gameDetails.game.awayCompetitor?.name}:</span>
                     <strong style={{ fontSize: '12px', color: 'var(--text-primary)' }}>{getKeyPlayer(gameDetails.game.awayCompetitor?.id, false)}</strong>
