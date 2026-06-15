@@ -66,7 +66,31 @@ export default function App() {
             await setDoc(userDocRef, userData);
             setUser(userData);
           } else {
-            setUser(userSnap.data());
+            let userData = userSnap.data();
+            
+            // 1. ADMIN OVERRIDE: Este correo siempre será Premium
+            if (userData.email === 'danielgarciagonzalezarmenia@gmail.com') {
+              userData.isPremium = true;
+            } 
+            // 2. EXPIRATION CHECK: Si es premium pero ya pasó la fecha
+            else if (userData.isPremium && userData.premiumUntil) {
+              const now = new Date();
+              const expiration = new Date(userData.premiumUntil);
+              if (now > expiration) {
+                // Se acabó el mes de Premium
+                userData.isPremium = false;
+                userData.premiumUntil = null;
+                userData.planType = 'free';
+                // Actualizamos la base de datos para quitarle el premium definitivamente
+                setDoc(userDocRef, { 
+                  isPremium: false, 
+                  premiumUntil: null, 
+                  planType: 'free' 
+                }, { merge: true }).catch(console.error);
+              }
+            }
+
+            setUser(userData);
           }
         } catch (err) {
           console.error("Error setting up user in Firestore:", err);
