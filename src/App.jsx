@@ -4,7 +4,6 @@ import MatchCard from './components/MatchCard';
 import MatchDetails from './components/MatchDetails';
 import LeagueDetails from './components/LeagueDetails';
 import TeamDetails from './components/TeamDetails';
-import PlayerDetails from './components/PlayerDetails';
 import axios from 'axios';
 import confetti from 'canvas-confetti';
 import { ShieldAlert, CalendarClock, Trophy } from 'lucide-react';
@@ -444,15 +443,6 @@ export default function App() {
             return (
               <TeamDetails 
                 teamId={activeModal.id} 
-                onClose={goBack} 
-                onClear={closeAll}
-                onOpenModal={openModal}
-              />
-            );
-          case 'player':
-            return (
-              <PlayerDetails 
-                playerId={activeModal.id} 
                 onClose={goBack} 
                 onClear={closeAll}
                 onOpenModal={openModal}

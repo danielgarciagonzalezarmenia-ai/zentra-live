@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2 } from 'lucide-react';
+import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap } from 'lucide-react';
 import { useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
@@ -41,7 +41,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
         <Lock size={48} color="var(--accent-emerald)" style={{ marginBottom: '16px' }} />
         <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '12px' }}>ZENTRA Premium</h2>
         <p style={{ fontSize: '14px', color: 'var(--text-secondary)', maxWidth: '400px', lineHeight: '1.6', marginBottom: '24px' }}>
-          Para acceder a las tendencias de alta probabilidad y asegurar tus apuestas, adquiere la versión ZENTRA Premium.
+          Para acceder al <strong>Radar de Valor</strong>, descubrir oportunidades de alta probabilidad y recibir alertas en vivo en tu correo, adquiere la versión ZENTRA Premium.
         </p>
         <button 
           onClick={handlePayment}
@@ -78,8 +78,8 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
   if (uniqueTrends.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-        <TrendingUp size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
-        <p style={{ margin: 0, fontSize: '14px' }}>No hay tendencias de valor (+1.40) disponibles para este partido.</p>
+        <Target size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
+        <p style={{ margin: 0, fontSize: '14px' }}>El radar no ha detectado oportunidades de valor (+1.40) para este partido.</p>
       </div>
     );
   }
@@ -212,9 +212,9 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
       {/* Todas las Tendencias Unificadas */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
-          <TrendingUp size={16} color="var(--accent-emerald)" />
+          <Target size={16} color="var(--accent-emerald)" />
           <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
-            Tendencias del Partido
+            Oportunidades de Valor
           </h3>
           <span style={{ fontSize: '9px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '2px 6px', borderRadius: '8px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Cuota {'>='} 1.40

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutList, Users, BarChart3, Code, TrendingUp } from 'lucide-react';
+import { LayoutList, Users, BarChart3, Code, TrendingUp, Target } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import TimelineTab from './TimelineTab';
@@ -226,7 +226,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
               {[
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },
                 { id: 'lineup', name: 'Alineación Táctica', icon: <Users size={14} /> },
-                { id: 'trends', name: 'Tendencias', icon: <TrendingUp size={14} /> },
+                { id: 'trends', name: 'Radar de Valor', icon: <Target size={14} /> },
                 { id: 'stats', name: 'Estadísticas', icon: <BarChart3 size={14} /> }
               ].map(tab => {
                 const isSelected = activeTab === tab.id;

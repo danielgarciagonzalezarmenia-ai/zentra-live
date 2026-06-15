@@ -403,3 +403,171 @@ app.post('/api/webhook', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`ZENTRA backend server running on port ${PORT}`);
 });
+
+// ----------------------------------------------------
+// ZENTRA VALUE RADAR - EMAIL NOTIFIER CRON JOB
+// ----------------------------------------------------
+const notifiedMatches = new Set();
+
+async function checkLiveMatchesAndAlert() {
+  try {
+    const url = `https://webws.365scores.com/web/games/current/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1`;
+    const res = await axios.get(url, { headers: scrapeHeaders });
+    const games = res.data.games || [];
+    
+    // Filter live matches (statusGroup 3 is live)
+    const liveGames = games.filter(g => g.statusGroup === 3);
+    
+    for (const game of liveGames) {
+      if (notifiedMatches.has(game.id)) continue; // Already alerted for this game
+
+      // Check time: 60 to 85 mins. Usually gameTime is the minute.
+      const minute = game.gameTime || 0;
+      if (minute >= 60 && minute <= 85) {
+        
+        // Calculate goal difference
+        const homeScore = game.homeCompetitor.score >= 0 ? game.homeCompetitor.score : 0;
+        const awayScore = game.awayCompetitor.score >= 0 ? game.awayCompetitor.score : 0;
+        const diff = Math.abs(homeScore - awayScore);
+        
+        // We want tight games: difference of 0 or 1.
+        if (diff <= 1) {
+          
+          // Fetch stats
+          const statsRes = await axios.get(`https://webws.365scores.com/web/game/stats/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&games=${game.id}`, { headers: scrapeHeaders }).catch(() => null);
+          
+          if (statsRes && statsRes.data.statistics && statsRes.data.statistics[0]) {
+            const stats = statsRes.data.statistics[0].statistics;
+            
+            let homeAttacks = 0, awayAttacks = 0;
+            let homeShots = 0, awayShots = 0;
+            let homePoss = 0, awayPoss = 0;
+            
+            stats.forEach(s => {
+              const name = s.name.toLowerCase();
+              if (name.includes('peligros') || name.includes('danger')) {
+                homeAttacks = parseInt(s.homeValue) || 0;
+                awayAttacks = parseInt(s.awayValue) || 0;
+              }
+              if (name.includes('puerta') || name.includes('arco') || name.includes('target')) {
+                homeShots = parseInt(s.homeValue) || 0;
+                awayShots = parseInt(s.awayValue) || 0;
+              }
+              if (name.includes('poses') || name.includes('poss')) {
+                homePoss = parseInt(s.homeValue) || 0;
+                awayPoss = parseInt(s.awayValue) || 0;
+              }
+            });
+            
+            // Criteria for domination
+            const homeDomination = homeAttacks >= 50 && homeShots >= 4 && homePoss >= 55;
+            const awayDomination = awayAttacks >= 50 && awayShots >= 4 && awayPoss >= 55;
+            
+            if (homeDomination || awayDomination) {
+              const dominatingTeam = homeDomination ? game.homeCompetitor.name : game.awayCompetitor.name;
+              const dominatedTeam = homeDomination ? game.awayCompetitor.name : game.homeCompetitor.name;
+              
+              console.log(`[ALERTA RADAR] ${dominatingTeam} está dominando a ${dominatedTeam}! Minuto: ${minute}`);
+              await sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, minute);
+              notifiedMatches.add(game.id);
+            }
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error checking live matches:", error.message);
+  }
+}
+
+async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, minute) {
+  if (!dbAdmin) return;
+  
+  try {
+    // 1. Get all premium users
+    const usersSnapshot = await dbAdmin.collection('users').where('isPremium', '==', true).get();
+    const emails = [];
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.email) emails.push(data.email);
+    });
+    
+    if (emails.length === 0) return;
+    
+    // 2. Build HTML Template
+    const htmlTemplate = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #1e293b;">
+        <div style="background: linear-gradient(135deg, #0df0a3 0%, #0ea5e9 100%); padding: 24px; text-align: center;">
+          <h1 style="color: #000; margin: 0; font-size: 24px; font-weight: 900; letter-spacing: 1px;">ZENTRA PREMIUM</h1>
+          <p style="color: #000; margin: 5px 0 0 0; font-weight: 700; opacity: 0.8;">RADAR DE VALOR - ALERTA EN VIVO</p>
+        </div>
+        
+        <div style="padding: 32px 24px;">
+          <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid #334155; margin-bottom: 24px;">
+            <p style="color: #94a3b8; font-size: 14px; font-weight: 700; text-transform: uppercase; margin: 0 0 12px 0;">Minuto ${minute}'</p>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+              <div style="text-align: right; flex: 1;">
+                <span style="font-weight: 800; font-size: 18px;">${game.homeCompetitor.name}</span>
+              </div>
+              <div style="background: #1e293b; padding: 8px 16px; border-radius: 8px; font-weight: 900; font-size: 24px; color: #0df0a3;">
+                ${homeScore} - ${awayScore}
+              </div>
+              <div style="text-align: left; flex: 1;">
+                <span style="font-weight: 800; font-size: 18px;">${game.awayCompetitor.name}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: rgba(13, 240, 163, 0.1); border-left: 4px solid #0df0a3; padding: 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 24px;">
+            <h3 style="color: #0df0a3; margin: 0 0 8px 0; font-size: 18px;">🔥 SUGERENCIA: GOL INMINENTE O CÓRNERS</h3>
+            <p style="color: #cbd5e1; margin: 0; font-size: 15px; line-height: 1.5;">El <strong>${dominatingTeam}</strong> está generando una presión extrema sobre el rival. Recomendamos apostar a <strong>Próximo Gol</strong>, <strong>Over de Goles</strong> o <strong>Próximo Córner</strong>.</p>
+          </div>
+          
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; background: rgba(255,255,255,0.02); border-radius: 8px; overflow: hidden;">
+            <thead>
+              <tr>
+                <th style="padding: 12px; text-align: left; color: #94a3b8; font-size: 12px; border-bottom: 1px solid #334155;">Estadística</th>
+                <th style="padding: 12px; text-align: center; color: #94a3b8; font-size: 12px; border-bottom: 1px solid #334155;">Local</th>
+                <th style="padding: 12px; text-align: center; color: #94a3b8; font-size: 12px; border-bottom: 1px solid #334155;">Visitante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 12px; border-bottom: 1px solid #1e293b; font-size: 14px; font-weight: 600;">Ataques Peligrosos</td>
+                <td style="padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #fff;">${homeAttacks}</td>
+                <td style="padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #fff;">${awayAttacks}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-size: 14px; font-weight: 600;">Tiros a Puerta</td>
+                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${homeShots}</td>
+                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${awayShots}</td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <a href="https://danielgarciagonzalezarmenia-ai.github.io/zentra-live/" style="display: block; width: 100%; text-align: center; background: #0df0a3; color: #000; padding: 14px 0; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 16px;">Ir a ZENTRA Live</a>
+        </div>
+        <div style="background: #0b1120; padding: 16px; text-align: center; font-size: 12px; color: #64748b;">
+          Recibes este correo porque tienes activa tu membresía ZENTRA Premium. Las apuestas conllevan riesgo, juega con responsabilidad.
+        </div>
+      </div>
+    `;
+
+    const mailOptions = {
+      from: '"ZENTRA Premium Radar" <' + process.env.EMAIL_USER + '>',
+      bcc: emails.join(','), // bcc para no revelar los correos entre sí
+      subject: `🔥 ALERTA DE GOL: ${game.homeCompetitor.name} vs ${game.awayCompetitor.name}`,
+      html: htmlTemplate
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`[Premium Radar] Alerta enviada a ${emails.length} usuarios para el partido ${game.id}`);
+    
+  } catch (err) {
+    console.error("Error sending premium emails:", err);
+  }
+}
+
+// Iniciar el cron job cada 5 minutos (300,000 ms)
+setInterval(checkLiveMatchesAndAlert, 300000);
+console.log("ZENTRA Premium Radar cron job started. Checking live games every 5 minutes.");
