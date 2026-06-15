@@ -24,10 +24,13 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
       setLoading(true);
       setError(null);
       try {
-        // Fetch details (timeline/lineup), stats, and trends concurrently
-        const [detailsRes, statsRes] = await Promise.all([
+        // Fetch details, stats, firebase trends, and proxy trends CONCURRENTLY for maximum speed
+        const trendDocRef = doc(db, 'game_trends', matchId.toString());
+        const [detailsRes, statsRes, trendSnap, proxyTrendsRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/game/${matchId}`),
-          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`)
+          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`),
+          getDoc(trendDocRef).catch((e) => { console.error('Firebase error:', e); return null; }),
+          axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
         ]);
 
         const gameData = detailsRes.data?.game || {};
@@ -41,26 +44,16 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
         let finalTrends = null;
 
         if (isFrozenWindow) {
-           const trendDocRef = doc(db, 'game_trends', matchId.toString());
-           let trendSnap = null;
-           try {
-              trendSnap = await getDoc(trendDocRef);
-           } catch (firebaseErr) {
-              console.error('Firebase error fetching trends:', firebaseErr);
-           }
-           
            if (trendSnap && trendSnap.exists()) {
               finalTrends = trendSnap.data();
            } else {
-              const trendsRes = await axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }));
-              finalTrends = trendsRes.data;
+              finalTrends = proxyTrendsRes.data;
               if (finalTrends?.trends?.length > 0) {
                  await setDoc(trendDocRef, finalTrends).catch(e => console.error('Firebase write error:', e));
               }
            }
         } else {
-           const trendsRes = await axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }));
-           finalTrends = trendsRes.data;
+           finalTrends = proxyTrendsRes.data;
         }
 
         setGameDetails(detailsRes.data);

@@ -19,8 +19,8 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
       const res = await axios.post(`${API_BASE_URL}/api/create_preference`, {
         uid: user.uid,
         email: user.email,
-        title: 'ZENTRA Premium (1 Año)',
-        price: 50000 // Ejemplo: 50.000 COP
+        title: 'ZENTRA Premium (1 Mes)',
+        price: 15000 // Pago de 15.000 COP mensuales
       });
       
       if (res.data.init_point) {

@@ -383,10 +383,10 @@ app.post('/api/webhook', async (req, res) => {
         const uid = paymentData.metadata.uid;
         
         if (uid && dbAdmin) {
-          // Activar Premium en Firestore
+          // Activar Premium en Firestore por 1 mes
           await dbAdmin.collection('users').doc(uid).update({
             isPremium: true,
-            premiumUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(), // 1 año
+            premiumUntil: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(), // 1 mes
             planType: 'premium'
           });
           console.log(`[Premium Activado] Usuario: ${uid}`);
