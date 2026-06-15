@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap } from 'lucide-react';
+import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap, Mail, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
@@ -39,10 +39,40 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, var(--aura-emerald) 0%, transparent 50%)', opacity: 0.5, pointerEvents: 'none' }} />
         <Lock size={48} color="var(--accent-emerald)" style={{ marginBottom: '16px' }} />
-        <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '12px' }}>ZENTRA Premium</h2>
-        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', maxWidth: '400px', lineHeight: '1.6', marginBottom: '24px' }}>
-          Para acceder al <strong>Radar de Valor</strong>, descubrir oportunidades de alta probabilidad y recibir alertas en vivo en tu correo, adquiere la versión ZENTRA Premium.
-        </p>
+        <h2 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px', letterSpacing: '0.5px' }}>ZENTRA Premium</h2>
+        <p style={{ fontSize: '15px', color: 'var(--text-muted)', marginBottom: '24px' }}>Mejora tu rentabilidad con herramientas profesionales.</p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '380px', width: '100%', textAlign: 'left', marginBottom: '32px', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            <div style={{ padding: '6px', background: 'rgba(13,240,163,0.1)', borderRadius: '8px', color: 'var(--accent-emerald)' }}>
+              <Target size={18} />
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)' }}>Radar de Valor Exclusivo</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Accede a las tendencias y oportunidades de alta probabilidad con cuotas superiores a 1.40.</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            <div style={{ padding: '6px', background: 'rgba(14,165,233,0.1)', borderRadius: '8px', color: 'var(--accent-cyan)' }}>
+              <Mail size={18} />
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)' }}>Alertas de "Gol Inminente"</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Nuestro robot escanea partidos en vivo y te envía correos cuando un equipo está dominando brutalmente.</p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+            <div style={{ padding: '6px', background: 'rgba(245,158,11,0.1)', borderRadius: '8px', color: '#f59e0b' }}>
+              <ShieldCheck size={18} />
+            </div>
+            <div>
+              <h4 style={{ margin: '0 0 4px 0', fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)' }}>Sin Riesgo de Publicidad</h4>
+              <p style={{ margin: 0, fontSize: '13px', color: 'var(--text-secondary)', lineHeight: '1.4' }}>Navegación limpia, rápida y enfocada 100% en análisis de datos puros y reales.</p>
+            </div>
+          </div>
+        </div>
         <button 
           onClick={handlePayment}
           disabled={loadingPayment}
