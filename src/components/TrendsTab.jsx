@@ -1,7 +1,62 @@
 import React from 'react';
-import { TrendingUp, Award, ExternalLink, Percent } from 'lucide-react';
+import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
-export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
+export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
+  const isPremium = user?.isPremium;
+  const [loadingPayment, setLoadingPayment] = useState(false);
+
+  const handlePayment = async () => {
+    if (!user) {
+      alert("Debes iniciar sesión primero.");
+      return;
+    }
+    
+    try {
+      setLoadingPayment(true);
+      const res = await axios.post(`${API_BASE_URL}/api/create_preference`, {
+        uid: user.uid,
+        email: user.email,
+        title: 'ZENTRA Premium (1 Año)',
+        price: 50000 // Ejemplo: 50.000 COP
+      });
+      
+      if (res.data.init_point) {
+        window.location.href = res.data.init_point;
+      }
+    } catch (err) {
+      console.error("Error al iniciar pago:", err);
+      alert("Hubo un error al conectar con Mercado Pago. Intenta más tarde.");
+    } finally {
+      setLoadingPayment(false);
+    }
+  };
+
+  if (!isPremium) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, var(--aura-emerald) 0%, transparent 50%)', opacity: 0.5, pointerEvents: 'none' }} />
+        <Lock size={48} color="var(--accent-emerald)" style={{ marginBottom: '16px' }} />
+        <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', marginBottom: '12px' }}>ZENTRA Premium</h2>
+        <p style={{ fontSize: '14px', color: 'var(--text-secondary)', maxWidth: '400px', lineHeight: '1.6', marginBottom: '24px' }}>
+          Para acceder a las tendencias de alta probabilidad y asegurar tus apuestas, adquiere la versión ZENTRA Premium.
+        </p>
+        <button 
+          onClick={handlePayment}
+          disabled={loadingPayment}
+          style={{ padding: '12px 32px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', color: '#000', border: 'none', fontWeight: '800', fontSize: '14px', cursor: loadingPayment ? 'not-allowed' : 'pointer', boxShadow: '0 0 20px rgba(13,240,163,0.3)', transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '8px' }}
+          onMouseEnter={(e) => !loadingPayment && (e.currentTarget.style.transform = 'translateY(-2px)')}
+          onMouseLeave={(e) => !loadingPayment && (e.currentTarget.style.transform = 'translateY(0)')}
+        >
+          {loadingPayment && <Loader2 size={16} className="animate-spin" />}
+          {user ? (loadingPayment ? 'Cargando...' : 'Adquirir Premium') : 'Inicia Sesión para Adquirir'}
+        </button>
+      </div>
+    );
+  }
+
   const trends = trendsData?.trends || [];
 
   const getTrendRate = (t) => t.odds?.rate?.decimal || t.odds?.prematchRate?.decimal || 0;

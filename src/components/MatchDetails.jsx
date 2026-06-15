@@ -9,7 +9,7 @@ import TrendsTab from './TrendsTab';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-export default function MatchDetails({ matchId, onClose, onClear, onOpenModal }) {
+export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gameDetails, setGameDetails] = useState(null);
@@ -297,8 +297,9 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
               {activeTab === 'trends' && (
                 <TrendsTab 
                   trendsData={trendsData} 
-                  homeTeam={home} 
-                  awayTeam={away} 
+                  homeTeam={gameDetails?.homeCompetitor} 
+                  awayTeam={gameDetails?.awayCompetitor} 
+                  user={user}
                   onOpenModal={onOpenModal}
                 />
               )}

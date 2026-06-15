@@ -1,7 +1,46 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const { MercadoPagoConfig, Preference } = require('mercadopago');
+const admin = require('firebase-admin');
+const nodemailer = require('nodemailer');
 
+// ----------------------------------------------------
+// FIREBASE ADMIN SETUP (For updating user Premium status)
+// ----------------------------------------------------
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  try {
+    const serviceAccount = JSON.parse(Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8'));
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
+    console.log("Firebase Admin initialized successfully.");
+  } catch (error) {
+    console.error("Firebase Admin initialization failed:", error);
+  }
+} else {
+  console.warn("FIREBASE_SERVICE_ACCOUNT not set in environment.");
+}
+
+const dbAdmin = admin.apps.length ? admin.firestore() : null;
+
+// ----------------------------------------------------
+// MERCADO PAGO SETUP
+// ----------------------------------------------------
+const mpClient = new MercadoPagoConfig({ 
+  accessToken: process.env.MERCADO_PAGO_TOKEN || 'TEST-TOKEN' 
+});
+
+// ----------------------------------------------------
+// NODEMAILER SETUP
+// ----------------------------------------------------
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -275,6 +314,88 @@ app.get('/api/athlete/:id', async (req, res) => {
   } catch (error) {
     console.error(`Error fetching athlete details for ${id}:`, error.message);
     res.status(500).json({ error: 'Error al obtener detalles del jugador.', message: error.message });
+  }
+});
+
+// ----------------------------------------------------
+// PREMIUM: MERCADO PAGO ENDPOINTS
+// ----------------------------------------------------
+
+// Crear preferencia de pago
+app.post('/api/create_preference', async (req, res) => {
+  const { uid, email, title, price } = req.body;
+  
+  if (!uid) {
+    return res.status(400).json({ error: 'Falta el UID del usuario.' });
+  }
+
+  try {
+    const preference = new Preference(mpClient);
+    const result = await preference.create({
+      body: {
+        items: [
+          {
+            title: title || 'ZENTRA Premium',
+            quantity: 1,
+            unit_price: Number(price) || 10000,
+            currency_id: 'COP'
+          }
+        ],
+        payer: {
+          email: email
+        },
+        metadata: {
+          uid: uid // Guardamos el UID para saber a quién activar el premium
+        },
+        back_urls: {
+          success: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live',
+          failure: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live',
+          pending: 'https://danielgarciagonzalezarmenia-ai.github.io/zentra-live'
+        },
+        auto_return: 'approved',
+        notification_url: 'https://zentra-live-backend.onrender.com/api/webhook'
+      }
+    });
+
+    res.json({ id: result.id, init_point: result.init_point });
+  } catch (error) {
+    console.error('Error creando preferencia:', error);
+    res.status(500).json({ error: 'Error al crear la preferencia de pago.' });
+  }
+});
+
+// Webhook para recibir notificación de pago exitoso
+app.post('/api/webhook', async (req, res) => {
+  const payment = req.query;
+
+  try {
+    if (payment.type === 'payment') {
+      const data = await axios.get(`https://api.mercadopago.com/v1/payments/${payment['data.id']}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.MERCADO_PAGO_TOKEN}`
+        }
+      });
+
+      const paymentData = data.data;
+      
+      if (paymentData.status === 'approved') {
+        const uid = paymentData.metadata.uid;
+        
+        if (uid && dbAdmin) {
+          // Activar Premium en Firestore
+          await dbAdmin.collection('users').doc(uid).update({
+            isPremium: true,
+            premiumUntil: new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString(), // 1 año
+            planType: 'premium'
+          });
+          console.log(`[Premium Activado] Usuario: ${uid}`);
+        }
+      }
+    }
+    res.status(200).send('OK');
+  } catch (error) {
+    console.error('Error en Webhook:', error);
+    res.status(500).send('Error');
   }
 });
 

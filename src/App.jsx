@@ -401,6 +401,7 @@ export default function App() {
             return (
               <MatchDetails 
                 matchId={activeModal.id} 
+                user={user}
                 onClose={goBack} 
                 onClear={closeAll}
                 onOpenModal={openModal}
