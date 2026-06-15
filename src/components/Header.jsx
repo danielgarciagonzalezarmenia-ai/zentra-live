@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Calendar, RefreshCw, Trophy, Zap, Search } from 'lucide-react';
+import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown } from 'lucide-react';
 import axios from 'axios';
 
 export default function Header({ 
@@ -12,7 +12,11 @@ export default function Header({
   setSelectedLeagueId, 
   onRefresh, 
   loading,
-  onOpenModal
+  onOpenModal,
+  user,
+  authLoading,
+  onLogin,
+  onLogout
 }) {
   const fileInputRef = useRef(null);
 
@@ -21,6 +25,7 @@ export default function Header({
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -45,7 +50,10 @@ export default function Header({
   }, [searchQuery]);
 
   useEffect(() => {
-    const handleClickOutside = () => setShowDropdown(false);
+    const handleClickOutside = () => {
+      setShowDropdown(false);
+      setShowUserDropdown(false);
+    };
     window.addEventListener('click', handleClickOutside);
     return () => window.removeEventListener('click', handleClickOutside);
   }, []);
@@ -254,7 +262,7 @@ export default function Header({
           )}
         </div>
 
-        {/* Global Live Filter & Refresh */}
+        {/* Global Live Filter, Refresh & Auth */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button 
             onClick={() => setFilterLive(!filterLive)}
@@ -298,6 +306,211 @@ export default function Header({
           >
             <RefreshCw size={16} className={loading ? 'skeleton' : ''} style={{ animation: loading ? 'skeleton-glow 1s infinite' : 'none' }} />
           </button>
+
+          {/* Firebase Authentication Area */}
+          {authLoading ? (
+            <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+          ) : user ? (
+            <div 
+              style={{ position: 'relative' }} 
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* User Avatar trigger */}
+              <button
+                onClick={() => setShowUserDropdown(!showUserDropdown)}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  border: user.isPremium ? '2px solid var(--warning)' : '1px solid var(--border-color)',
+                  background: 'linear-gradient(135deg, var(--bg-secondary) 0%, rgba(255,255,255,0.02) 100%)',
+                  padding: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  boxShadow: user.isPremium ? '0 0 10px rgba(245, 158, 11, 0.3)' : 'none',
+                  transition: 'all 0.2s ease'
+                }}
+                title={user.displayName}
+              >
+                {user.photoURL ? (
+                  <img 
+                    src={user.photoURL} 
+                    alt={user.displayName} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                ) : (
+                  <div style={{ fontSize: '14px', fontWeight: '800', color: 'var(--accent-emerald)' }}>
+                    {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
+                  </div>
+                )}
+                {user.isPremium && (
+                  <div style={{
+                    position: 'absolute',
+                    bottom: -2,
+                    right: -2,
+                    background: 'var(--warning)',
+                    borderRadius: '50%',
+                    width: '12px',
+                    height: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    border: '1px solid var(--bg-primary)'
+                  }}>
+                    <Crown size={8} color="#070a13" style={{ strokeWidth: 3 }} />
+                  </div>
+                )}
+              </button>
+
+              {/* User Profile Dropdown */}
+              {showUserDropdown && (
+                <div className="glass-panel" style={{
+                  position: 'absolute',
+                  top: '44px',
+                  right: 0,
+                  width: '260px',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(11, 15, 25, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+                  zIndex: 1000,
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '14px'
+                }}>
+                  {/* User Profile Header */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      border: user.isPremium ? '2px solid var(--warning)' : '1px solid var(--border-color)',
+                      flexShrink: 0
+                    }}>
+                      {user.photoURL ? (
+                        <img 
+                          src={user.photoURL} 
+                          alt={user.displayName} 
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-secondary)', fontSize: '18px', fontWeight: '800', color: 'var(--accent-emerald)' }}>
+                          {user.displayName ? user.displayName[0].toUpperCase() : 'U'}
+                        </div>
+                      )}
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                      <span style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {user.displayName}
+                      </span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {user.email}
+                      </span>
+                    </div>
+                  </div>
+
+                  <hr style={{ border: 0, borderTop: '1px solid var(--border-color)', margin: 0 }} />
+
+                  {/* Membership Card */}
+                  <div style={{
+                    padding: '12px',
+                    borderRadius: '12px',
+                    background: user.isPremium 
+                      ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)' 
+                      : 'rgba(255, 255, 255, 0.02)',
+                    border: user.isPremium 
+                      ? '1px solid rgba(245, 158, 11, 0.3)' 
+                      : '1px solid var(--border-color)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      {user.isPremium ? (
+                        <>
+                          <Crown size={14} color="var(--warning)" style={{ flexShrink: 0 }} />
+                          <span style={{ fontSize: '12px', fontWeight: '800', color: 'var(--warning)' }}>MIEMBRO PREMIUM</span>
+                        </>
+                      ) : (
+                        <>
+                          <User size={14} color="var(--text-muted)" style={{ flexShrink: 0 }} />
+                          <span style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-secondary)' }}>PLAN GRATUITO</span>
+                        </>
+                      )}
+                    </div>
+                    <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                      {user.isPremium 
+                        ? (user.premiumUntil ? `Vence el: ${new Date(user.premiumUntil).toLocaleDateString()}` : 'Acceso Ilimitado')
+                        : 'Regístrate para obtener funciones exclusivas en el futuro.'}
+                    </span>
+                  </div>
+
+                  {/* Log Out Button */}
+                  <button 
+                    onClick={() => { setShowUserDropdown(false); onLogout(); }}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(239, 68, 68, 0.2)',
+                      background: 'rgba(239, 68, 68, 0.05)',
+                      color: 'var(--danger)',
+                      fontSize: '12px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.05)'; }}
+                  >
+                    <LogOut size={12} />
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button 
+              onClick={onLogin}
+              style={{
+                padding: '8px 14px',
+                borderRadius: '20px',
+                border: '1px solid var(--accent-emerald)',
+                background: 'rgba(13, 240, 163, 0.05)',
+                color: 'var(--accent-emerald)',
+                fontSize: '12px',
+                fontWeight: '700',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(13, 240, 163, 0.15)';
+                e.currentTarget.style.boxShadow = '0 0 10px rgba(13, 240, 163, 0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(13, 240, 163, 0.05)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <LogIn size={13} />
+              Acceder
+            </button>
+          )}
         </div>
       </div>
 

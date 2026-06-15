@@ -8,6 +8,9 @@ import PlayerDetails from './components/PlayerDetails';
 import axios from 'axios';
 import confetti from 'canvas-confetti';
 import { ShieldAlert, CalendarClock, Trophy } from 'lucide-react';
+import { auth, db, googleProvider } from './firebase';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function App() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -18,6 +21,73 @@ export default function App() {
   const [modalStack, setModalStack] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Authentication State
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  // Auth State Listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setAuthLoading(true);
+      if (currentUser) {
+        try {
+          // Fetch or create user record in Firestore
+          const userDocRef = doc(db, 'users', currentUser.uid);
+          const userSnap = await getDoc(userDocRef);
+          
+          if (!userSnap.exists()) {
+            const userData = {
+              uid: currentUser.uid,
+              email: currentUser.email,
+              displayName: currentUser.displayName,
+              photoURL: currentUser.photoURL,
+              createdAt: new Date().toISOString(),
+              isPremium: false,
+              premiumUntil: null,
+              planType: 'free'
+            };
+            await setDoc(userDocRef, userData);
+            setUser(userData);
+          } else {
+            setUser(userSnap.data());
+          }
+        } catch (err) {
+          console.error("Error setting up user in Firestore:", err);
+          // Fallback to local auth object if firestore fails (e.g. offline or permission rules)
+          setUser({
+            uid: currentUser.uid,
+            email: currentUser.email,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+            isPremium: false,
+            planType: 'free'
+          });
+        }
+      } else {
+        setUser(null);
+      }
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   const openModal = (type, id) => {
     setModalStack(prev => [...prev, { type, id: Number(id) }]);
@@ -224,6 +294,10 @@ export default function App() {
         onRefresh={() => fetchData(true)}
         loading={loading}
         onOpenModal={openModal}
+        user={user}
+        authLoading={authLoading}
+        onLogin={handleLogin}
+        onLogout={handleLogout}
       />
 
       {/* Main Content Area */}
