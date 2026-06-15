@@ -1,0 +1,378 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { Calendar, RefreshCw, Trophy, Zap, Search } from 'lucide-react';
+import axios from 'axios';
+
+export default function Header({ 
+  selectedDate, 
+  setSelectedDate, 
+  filterLive, 
+  setFilterLive, 
+  competitions, 
+  selectedLeagueId, 
+  setSelectedLeagueId, 
+  onRefresh, 
+  loading,
+  onOpenModal
+}) {
+  const fileInputRef = useRef(null);
+
+  // Search Engine State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSearchResults(null);
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+    const delayDebounce = setTimeout(async () => {
+      try {
+        const response = await axios.get(`http://${window.location.hostname}:5000/api/search?query=${searchQuery}`);
+        setSearchResults(response.data);
+      } catch (err) {
+        console.error('Error fetching search results:', err);
+      } finally {
+        setSearchLoading(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = () => setShowDropdown(false);
+    window.addEventListener('click', handleClickOutside);
+    return () => window.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  // Generate 7 days around selected date (3 before, selected, 3 after)
+  const getDaysArray = () => {
+    const days = [];
+    const baseDate = parseDateString(selectedDate);
+    
+    for (let i = -3; i <= 3; i++) {
+      const date = new Date(baseDate);
+      date.setDate(baseDate.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  // Helper to parse DD/MM/YYYY string into a Date object
+  const parseDateString = (str) => {
+    const [day, month, year] = str.split('/').map(Number);
+    return new Date(year, month - 1, day);
+  };
+
+  // Helper to format Date object into DD/MM/YYYY
+  const formatDateString = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  // Helper to display day names (Dom, Lun, Mar, etc.)
+  const getDayName = (date) => {
+    const weekdays = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+    return weekdays[date.getDay()];
+  };
+
+  const handleCustomDateChange = (e) => {
+    const val = e.target.value; // YYYY-MM-DD
+    if (val) {
+      const [year, month, day] = val.split('-');
+      setSelectedDate(`${day}/${month}/${year}`);
+    }
+  };
+
+  const days = getDaysArray();
+
+  return (
+    <header className="glass-panel" style={{ margin: '16px auto', maxWidth: '800px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
+      {/* Brand & Stats Button */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', boxShadow: '0 0 15px rgba(13,240,163,0.3)' }}>
+            <Zap size={22} color="#0b0f19" style={{ strokeWidth: 2.5 }} />
+          </div>
+          <div>
+            <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, #ffffff 0%, var(--text-secondary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              ZENTRA
+            </h1>
+            <span style={{ fontSize: '10px', color: 'var(--accent-emerald)', fontWeight: '700', letterSpacing: '1px' }}>LIVE SOCCER DATA</span>
+          </div>
+        </div>
+
+        {/* Search Engine */}
+        <div 
+          style={{ position: 'relative', minWidth: '220px', flex: 1, maxWidth: '280px' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <Search size={14} color="var(--text-muted)" style={{ position: 'absolute', left: '12px' }} />
+            <input 
+              type="text" 
+              placeholder="Buscar torneo, equipo, jugador..." 
+              value={searchQuery}
+              onChange={(e) => { setSearchQuery(e.target.value); setShowDropdown(true); }}
+              onFocus={() => setShowDropdown(true)}
+              style={{
+                width: '100%',
+                background: 'rgba(255, 255, 255, 0.02)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '12px',
+                padding: '8px 12px 8px 32px',
+                color: 'var(--text-primary)',
+                fontSize: '12px',
+                outline: 'none',
+                transition: 'all 0.2s ease',
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setShowDropdown(false);
+              }}
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => { setSearchQuery(''); setSearchResults(null); }}
+                style={{ position: 'absolute', right: '12px', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '14px' }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Search Dropdown Overlay */}
+          {showDropdown && searchQuery.trim() !== '' && (
+            <div className="glass-panel" style={{
+              position: 'absolute',
+              top: '40px',
+              left: 0,
+              right: 0,
+              maxHeight: '300px',
+              overflowY: 'auto',
+              borderRadius: '14px',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              background: 'rgba(11, 15, 25, 0.96)',
+              backdropFilter: 'blur(20px)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.6)',
+              zIndex: 1000,
+              padding: '6px 0'
+            }}>
+              {searchLoading ? (
+                <div style={{ padding: '12px', textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)' }}>
+                  Buscando...
+                </div>
+              ) : (!searchResults || (
+                (!searchResults.competitions || searchResults.competitions.length === 0) &&
+                (!searchResults.competitors || searchResults.competitors.length === 0) &&
+                (!searchResults.athletes || searchResults.athletes.length === 0)
+              )) ? (
+                <div style={{ padding: '12px', textAlign: 'center', fontSize: '11px', color: 'var(--text-muted)' }}>
+                  No se encontraron resultados
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '6px 12px' }}>
+                  {/* Ligas / Torneos */}
+                  {searchResults.competitions && searchResults.competitions.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', paddingLeft: '4px' }}>Torneos</span>
+                      {searchResults.competitions.slice(0, 3).map(comp => (
+                        <div 
+                          key={comp.id}
+                          onClick={() => { onOpenModal('league', comp.id); setShowDropdown(false); setSearchQuery(''); }}
+                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          className="search-item"
+                        >
+                          <img 
+                            src={`https://imagecache.365scores.com/image/upload/f_auto,w_32,h_32,c_limit,q_auto:eco,d_competitions:default1.png/competitions/${comp.id}`} 
+                            alt={comp.name} 
+                            style={{ width: '14px', height: '14px', objectFit: 'contain' }}
+                            onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitions:default1.png/competitions/default1'; }}
+                          />
+                          <span className="hover-underline">{comp.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Equipos */}
+                  {searchResults.competitors && searchResults.competitors.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--accent-emerald)', textTransform: 'uppercase', letterSpacing: '0.5px', paddingLeft: '4px' }}>Equipos</span>
+                      {searchResults.competitors.slice(0, 4).map(team => (
+                        <div 
+                          key={team.id}
+                          onClick={() => { onOpenModal('team', team.id); setShowDropdown(false); setSearchQuery(''); }}
+                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          className="search-item"
+                        >
+                          <img 
+                            src={`https://imagecache.365scores.com/image/upload/f_auto,w_32,h_32,c_limit,q_auto:eco,d_competitors:default1.png/competitors/${team.id}`} 
+                            alt={team.name} 
+                            style={{ width: '14px', height: '14px', objectFit: 'contain' }}
+                            onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                          />
+                          <span className="hover-underline">{team.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Jugadores */}
+                  {searchResults.athletes && searchResults.athletes.length > 0 && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                      <span style={{ fontSize: '9px', fontWeight: '800', color: 'var(--accent-cyan)', textTransform: 'uppercase', letterSpacing: '0.5px', paddingLeft: '4px' }}>Jugadores</span>
+                      {searchResults.athletes.slice(0, 4).map(player => (
+                        <div 
+                          key={player.id}
+                          onClick={() => { onOpenModal('player', player.id); setShowDropdown(false); setSearchQuery(''); }}
+                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          className="search-item"
+                        >
+                          <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', display: 'flex', alignItems: 'center', justify: 'center', fontSize: '8px', fontWeight: '900', color: '#0b0f19' }}>
+                            {player.name ? player.name[0].toUpperCase() : '?'}
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span className="hover-underline">{player.name}</span>
+                            {player.position && (
+                              <span style={{ fontSize: '8px', color: 'var(--text-muted)' }}>{player.position.name}</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Global Live Filter & Refresh */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <button 
+            onClick={() => setFilterLive(!filterLive)}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '20px',
+              border: filterLive ? '1px solid var(--accent-emerald)' : '1px solid var(--border-color)',
+              background: filterLive ? 'rgba(13, 240, 163, 0.1)' : 'transparent',
+              color: filterLive ? 'var(--accent-emerald)' : 'var(--text-secondary)',
+              fontSize: '13px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease',
+              boxShadow: filterLive ? '0 0 10px rgba(13, 240, 163, 0.15)' : 'none'
+            }}
+          >
+            <span className={filterLive ? 'live-dot' : ''} style={{ width: '6px', height: '6px', backgroundColor: filterLive ? 'var(--accent-emerald)' : 'var(--text-muted)' }} />
+            En Vivo
+          </button>
+
+          <button 
+            onClick={onRefresh}
+            disabled={loading}
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              border: '1px solid var(--border-color)',
+              background: 'transparent',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease'
+            }}
+            title="Actualizar partidos"
+          >
+            <RefreshCw size={16} className={loading ? 'skeleton' : ''} style={{ animation: loading ? 'skeleton-glow 1s infinite' : 'none' }} />
+          </button>
+        </div>
+      </div>
+
+      {/* Date Slider Selector */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', flex: 1, paddingBottom: '4px', scrollbarWidth: 'none' }} className="date-slider">
+          {days.map((d, idx) => {
+            const formatted = formatDateString(d);
+            const isSelected = formatted === selectedDate;
+            const isToday = formatDateString(new Date()) === formatted;
+            
+            return (
+              <button
+                key={idx}
+                onClick={() => setSelectedDate(formatted)}
+                style={{
+                  minWidth: '65px',
+                  padding: '8px 12px',
+                  borderRadius: '12px',
+                  border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid transparent',
+                  background: isSelected ? 'rgba(13, 240, 163, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                  color: isSelected ? 'var(--accent-emerald)' : 'var(--text-secondary)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span style={{ fontSize: '9px', fontWeight: '700', color: isSelected ? 'var(--accent-emerald)' : 'var(--text-muted)' }}>
+                  {getDayName(d)}
+                </span>
+                <span style={{ fontSize: '16px', fontWeight: '800' }}>
+                  {d.getDate()}
+                </span>
+                {isToday && (
+                  <span style={{ fontSize: '7px', fontWeight: '800', background: 'var(--bg-secondary)', padding: '2px 4px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    HOY
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Custom Date Input Trigger */}
+        <div style={{ position: 'relative' }}>
+          <button 
+            onClick={() => fileInputRef.current && fileInputRef.current.showPicker()}
+            style={{
+              width: '45px',
+              height: '45px',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)',
+              background: 'rgba(255, 255, 255, 0.02)',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Calendar size={18} />
+          </button>
+          <input 
+            type="date"
+            ref={fileInputRef}
+            onChange={handleCustomDateChange}
+            style={{ position: 'absolute', top: 0, left: 0, opacity: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+          />
+        </div>
+      </div>
+
+    </header>
+  );
+}
