@@ -42,15 +42,20 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
 
         if (isFrozenWindow) {
            const trendDocRef = doc(db, 'game_trends', matchId.toString());
-           const trendSnap = await getDoc(trendDocRef);
+           let trendSnap = null;
+           try {
+              trendSnap = await getDoc(trendDocRef);
+           } catch (firebaseErr) {
+              console.error('Firebase error fetching trends:', firebaseErr);
+           }
            
-           if (trendSnap.exists()) {
+           if (trendSnap && trendSnap.exists()) {
               finalTrends = trendSnap.data();
            } else {
               const trendsRes = await axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }));
               finalTrends = trendsRes.data;
               if (finalTrends?.trends?.length > 0) {
-                 await setDoc(trendDocRef, finalTrends).catch(console.error);
+                 await setDoc(trendDocRef, finalTrends).catch(e => console.error('Firebase write error:', e));
               }
            }
         } else {
