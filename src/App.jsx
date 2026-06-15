@@ -121,8 +121,10 @@ export default function App() {
 
   const fetchData = async (showLoading = true) => {
     if (!selectedDate) return;
-    if (showLoading) setLoading(true);
-    setError(null);
+    if (showLoading) {
+      setLoading(true);
+      setError(null);
+    }
     try {
       const response = await axios.get(`${API_BASE_URL}/api/games?date=${selectedDate}`);
       const data = response.data;
@@ -137,9 +139,12 @@ export default function App() {
 
       setGames(newGames);
       setCompetitions(newCompetitions);
+      setError(null);
     } catch (err) {
       console.error('Error fetching matches:', err);
-      setError('Ocurrió un error al obtener la lista de partidos.');
+      if (showLoading) {
+        setError('Ocurrió un error al obtener la lista de partidos.');
+      }
     } finally {
       if (showLoading) setLoading(false);
     }
@@ -150,14 +155,14 @@ export default function App() {
     fetchData(true);
   }, [selectedDate]);
 
-  // Live polling every 5 seconds if today's date is selected
+  // Live polling every 15 seconds if today's date is selected
   useEffect(() => {
     if (!selectedDate || selectedDate !== getTodayDateString()) return;
 
     const interval = setInterval(() => {
       console.log('Polling live scores...');
       fetchData(false); // fetch silently without skeleton flash
-    }, 5000);
+    }, 15000);
 
     return () => clearInterval(interval);
   }, [selectedDate]);
