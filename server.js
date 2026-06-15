@@ -486,8 +486,7 @@ async function checkLiveMatchesAndAlert() {
           }
         }
       }
-    }
-  } catch (error) {
+    } catch (error) {
     console.error("Error checking live matches:", error.message);
   }
 }
