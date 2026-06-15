@@ -9,7 +9,18 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
   // Filter out trends with rate < 1.40
   const validTrends = trends.filter(t => getTrendRate(t) >= 1.40);
 
-  if (validTrends.length === 0) {
+  // Remove duplicates by text (keeping the one with highest percentage if duplicate)
+  const uniqueMap = new Map();
+  validTrends.forEach(t => {
+    const key = t.text.toLowerCase().trim();
+    if (!uniqueMap.has(key) || t.percentage > uniqueMap.get(key).percentage) {
+      uniqueMap.set(key, t);
+    }
+  });
+
+  const uniqueTrends = Array.from(uniqueMap.values());
+
+  if (uniqueTrends.length === 0) {
     return (
       <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
         <TrendingUp size={32} style={{ marginBottom: '12px', opacity: 0.5 }} />
@@ -19,11 +30,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
   }
 
   // Sort trends by percentage confidence descending
-  const sortedTrends = [...validTrends].sort((a, b) => b.percentage - a.percentage);
-
-  // Top Trends: confidence percentage >= 0.80, or top 2 if none meet threshold
-  const topTrendsFilter = sortedTrends.filter(t => t.percentage >= 0.80);
-  const topTrends = topTrendsFilter.length > 0 ? topTrendsFilter : sortedTrends.slice(0, 2);
+  const sortedTrends = [...uniqueTrends].sort((a, b) => b.percentage - a.percentage);
 
   // Helper to render bookmaker rate trend
   const renderTrendIcon = (trend) => {
@@ -147,30 +154,16 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '16px 8px' }}>
       
-      {/* 1. Tendencias TOP */}
+      {/* Todas las Tendencias Unificadas */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
-          <Award size={16} color="var(--accent-emerald)" />
+          <TrendingUp size={16} color="var(--accent-emerald)" />
           <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
-            Tendencias Top
+            Tendencias del Partido
           </h3>
           <span style={{ fontSize: '9px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '2px 6px', borderRadius: '8px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Alta Probabilidad
+            Cuota {'>='} 1.40
           </span>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {topTrends.map(t => renderTrendCard(t))}
-        </div>
-      </div>
-
-      {/* 2. Todas las Tendencias */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
-          <Percent size={14} color="var(--accent-blue)" />
-          <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
-            Todas las Tendencias
-          </h3>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>

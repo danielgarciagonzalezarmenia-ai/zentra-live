@@ -6,6 +6,8 @@ import TimelineTab from './TimelineTab';
 import LineupPitch from './LineupPitch';
 import StatsTab from './StatsTab';
 import TrendsTab from './TrendsTab';
+import { db } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function MatchDetails({ matchId, onClose, onClear, onOpenModal }) {
   const [loading, setLoading] = useState(true);
@@ -23,15 +25,42 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
       setError(null);
       try {
         // Fetch details (timeline/lineup), stats, and trends concurrently
-        const [detailsRes, statsRes, trendsRes] = await Promise.all([
+        const [detailsRes, statsRes] = await Promise.all([
           axios.get(`${API_BASE_URL}/api/game/${matchId}`),
-          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`),
-          axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
+          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`)
         ]);
+
+        const gameData = detailsRes.data?.game || {};
+        const startTime = new Date(gameData.startTime);
+        const now = new Date();
+        const diffMins = (startTime - now) / 1000 / 60;
         
+        // Congelar si faltan 30 mins o menos, o si el partido ya no está "Not Started" (statusGroup !== 1)
+        const isFrozenWindow = diffMins <= 30 || gameData.statusGroup !== 1;
+
+        let finalTrends = null;
+
+        if (isFrozenWindow) {
+           const trendDocRef = doc(db, 'game_trends', matchId.toString());
+           const trendSnap = await getDoc(trendDocRef);
+           
+           if (trendSnap.exists()) {
+              finalTrends = trendSnap.data();
+           } else {
+              const trendsRes = await axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }));
+              finalTrends = trendsRes.data;
+              if (finalTrends?.trends?.length > 0) {
+                 await setDoc(trendDocRef, finalTrends).catch(console.error);
+              }
+           }
+        } else {
+           const trendsRes = await axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }));
+           finalTrends = trendsRes.data;
+        }
+
         setGameDetails(detailsRes.data);
         setStatsData(statsRes.data);
-        setTrendsData(trendsRes.data);
+        setTrendsData(finalTrends);
       } catch (err) {
         console.error('Error fetching details:', err);
         setError('No se pudieron cargar los detalles de este partido.');
