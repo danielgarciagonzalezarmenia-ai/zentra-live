@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Info } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
   const [loading, setLoading] = useState(true);
@@ -18,9 +19,9 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
       setError(null);
       try {
         const [metaRes, squadRes, gamesRes] = await Promise.all([
-          axios.get(`http://${window.location.hostname}:5000/api/competitor/${teamId}`),
-          axios.get(`http://${window.location.hostname}:5000/api/competitor/${teamId}/squad`).catch(() => ({ data: { squads: [] } })),
-          axios.get(`http://${window.location.hostname}:5000/api/competitor/${teamId}/games`).catch(() => ({ data: { games: [] } }))
+          axios.get(`${API_BASE_URL}/api/competitor/${teamId}`),
+          axios.get(`${API_BASE_URL}/api/competitor/${teamId}/squad`).catch(() => ({ data: { squads: [] } })),
+          axios.get(`${API_BASE_URL}/api/competitor/${teamId}/games`).catch(() => ({ data: { games: [] } }))
         ]);
         
         setTeamMeta(metaRes.data);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LayoutList, Users, BarChart3, Code, TrendingUp } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import TimelineTab from './TimelineTab';
 import LineupPitch from './LineupPitch';
 import StatsTab from './StatsTab';
@@ -23,9 +24,9 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal })
       try {
         // Fetch details (timeline/lineup), stats, and trends concurrently
         const [detailsRes, statsRes, trendsRes] = await Promise.all([
-          axios.get(`http://${window.location.hostname}:5000/api/game/${matchId}`),
-          axios.get(`http://${window.location.hostname}:5000/api/game/${matchId}/stats`),
-          axios.get(`http://${window.location.hostname}:5000/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
+          axios.get(`${API_BASE_URL}/api/game/${matchId}`),
+          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`),
+          axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
         ]);
         
         setGameDetails(detailsRes.data);

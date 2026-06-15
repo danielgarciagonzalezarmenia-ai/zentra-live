@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Calendar, BarChart3, ShieldAlert, Award, Clock, Activity, TrendingUp } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal }) {
   const [loading, setLoading] = useState(true);
@@ -21,13 +22,13 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
       setNextMatch(null);
       try {
         // 1. Fetch player metadata
-        const response = await axios.get(`http://${window.location.hostname}:5000/api/athlete/${playerId}`);
+        const response = await axios.get(`${API_BASE_URL}/api/athlete/${playerId}`);
         setPlayerData(response.data);
         const player = response.data?.athletes?.[0];
 
         if (player) {
           // 2. Fetch player matches (games)
-          const gamesRes = await axios.get(`http://${window.location.hostname}:5000/api/athlete/${playerId}/games`).catch(() => ({ data: { games: [] } }));
+          const gamesRes = await axios.get(`${API_BASE_URL}/api/athlete/${playerId}/games`).catch(() => ({ data: { games: [] } }));
           const gamesList = gamesRes.data?.games || [];
           setAthleteGames(gamesList);
 
@@ -37,7 +38,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
           const targetTeamId = (clubId && clubId > 0) ? clubId : ((nationalTeamId && nationalTeamId > 0) ? nationalTeamId : null);
 
           if (targetTeamId) {
-            const teamGamesRes = await axios.get(`http://${window.location.hostname}:5000/api/competitor/${targetTeamId}/games`).catch(() => ({ data: { games: [] } }));
+            const teamGamesRes = await axios.get(`${API_BASE_URL}/api/competitor/${targetTeamId}/games`).catch(() => ({ data: { games: [] } }));
             const teamGames = teamGamesRes.data?.games || [];
             // Find first upcoming or live match (statusGroup === 1 or 3)
             const upcoming = teamGames.find(g => g.statusGroup === 1 || g.statusGroup === 3);

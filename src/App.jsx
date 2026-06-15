@@ -11,6 +11,7 @@ import { ShieldAlert, CalendarClock, Trophy } from 'lucide-react';
 import { auth, db, googleProvider } from './firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { API_BASE_URL } from './config';
 
 export default function App() {
   const [selectedDate, setSelectedDate] = useState('');
@@ -123,7 +124,7 @@ export default function App() {
     if (showLoading) setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`http://${window.location.hostname}:5000/api/games?date=${selectedDate}`);
+      const response = await axios.get(`${API_BASE_URL}/api/games?date=${selectedDate}`);
       const data = response.data;
       
       const newGames = data.games || [];

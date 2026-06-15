@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Trophy, BarChart3, HelpCircle } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal }) {
   const [loading, setLoading] = useState(true);
@@ -17,8 +18,8 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
       setError(null);
       try {
         const [standingsRes, statsRes] = await Promise.all([
-          axios.get(`http://${window.location.hostname}:5000/api/competition/${leagueId}/standings`),
-          axios.get(`http://${window.location.hostname}:5000/api/competition/${leagueId}/stats`).catch(() => ({ data: { stats: {} } }))
+          axios.get(`${API_BASE_URL}/api/competition/${leagueId}/standings`),
+          axios.get(`${API_BASE_URL}/api/competition/${leagueId}/stats`).catch(() => ({ data: { stats: {} } }))
         ]);
         setStandingsData(standingsRes.data);
         setStatsData(statsRes.data);

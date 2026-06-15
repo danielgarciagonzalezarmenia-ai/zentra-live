@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 export default function Header({ 
   selectedDate, 
@@ -37,7 +38,7 @@ export default function Header({
     setSearchLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const response = await axios.get(`http://${window.location.hostname}:5000/api/search?query=${searchQuery}`);
+        const response = await axios.get(`${API_BASE_URL}/api/search?query=${searchQuery}`);
         setSearchResults(response.data);
       } catch (err) {
         console.error('Error fetching search results:', err);
