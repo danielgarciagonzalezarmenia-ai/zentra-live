@@ -1,38 +1,5 @@
 :root {
-  /* Dark Mode (Default) - Vibrant & Premium */
-  --bg-primary: #05070f;
-  --bg-secondary: #0d1221;
-  --bg-card: rgba(13, 18, 33, 0.7);
-  --border-color: rgba(255, 255, 255, 0.08);
-  
-  --accent-emerald: #0df0a3;
-  --accent-cyan: #0dcaf0;
-  --accent-blue: #3b82f6;
-  --accent-purple: #8b5cf6;
-  
-  --text-primary: #ffffff;
-  --text-secondary: #cbd5e1;
-  --text-muted: #64748b;
-  
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  
-  --glass-blur: blur(20px);
-  --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
-  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
-  
-  --aura-emerald: rgba(13, 240, 163, 0.12);
-  --aura-cyan: rgba(13, 202, 240, 0.12);
-  
-  font-family: 'Inter', sans-serif;
-  color-scheme: dark;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-:root[data-theme='light'] {
-  /* Light Mode - Clean, Bright & Premium */
+  /* Light Mode (Default) - Clean, Bright & Premium */
   --bg-primary: #f1f5f9;
   --bg-secondary: #e2e8f0;
   --bg-card: rgba(255, 255, 255, 0.75);
@@ -47,6 +14,10 @@
   --text-secondary: #334155;
   --text-muted: #64748b;
   
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
   --glass-blur: blur(24px);
   --glass-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.05);
   --glass-border: 1px solid rgba(255, 255, 255, 0.8);
@@ -54,7 +25,36 @@
   --aura-emerald: rgba(5, 150, 105, 0.1);
   --aura-cyan: rgba(2, 132, 199, 0.1);
   
+  font-family: 'Inter', sans-serif;
   color-scheme: light;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] {
+  /* Dark Mode - Vibrant & Premium */
+  --bg-primary: #05070f;
+  --bg-secondary: #0d1221;
+  --bg-card: rgba(13, 18, 33, 0.7);
+  --border-color: rgba(255, 255, 255, 0.08);
+  
+  --accent-emerald: #0df0a3;
+  --accent-cyan: #0dcaf0;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  
+  --glass-blur: blur(20px);
+  --glass-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.6);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  --aura-emerald: rgba(13, 240, 163, 0.12);
+  --aura-cyan: rgba(13, 202, 240, 0.12);
+  
+  color-scheme: dark;
 }
 
 body {
