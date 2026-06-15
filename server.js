@@ -442,6 +442,7 @@ async function checkLiveMatchesAndAlert() {
             let homeAttacks = 0, awayAttacks = 0;
             let homeShots = 0, awayShots = 0;
             let homePoss = 0, awayPoss = 0;
+            let homeCorners = 0, awayCorners = 0;
             
             stats.forEach(s => {
               const name = s.name.toLowerCase();
@@ -457,6 +458,10 @@ async function checkLiveMatchesAndAlert() {
                 homePoss = parseInt(s.homeValue) || 0;
                 awayPoss = parseInt(s.awayValue) || 0;
               }
+              if (name.includes('corner') || name.includes('córner') || name.includes('tiro de esquina')) {
+                homeCorners = parseInt(s.homeValue) || 0;
+                awayCorners = parseInt(s.awayValue) || 0;
+              }
             });
             
             // Criteria for domination
@@ -468,7 +473,7 @@ async function checkLiveMatchesAndAlert() {
               const dominatedTeam = homeDomination ? game.awayCompetitor.name : game.homeCompetitor.name;
               
               console.log(`[ALERTA RADAR] ${dominatingTeam} está dominando a ${dominatedTeam}! Minuto: ${minute}`);
-              await sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, minute);
+              await sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute);
               notifiedMatches.add(game.id);
             }
           }
@@ -480,7 +485,7 @@ async function checkLiveMatchesAndAlert() {
   }
 }
 
-async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, minute) {
+async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute) {
   if (!dbAdmin) return;
   
   try {
@@ -538,9 +543,14 @@ async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore
                 <td style="padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #fff;">${awayAttacks}</td>
               </tr>
               <tr>
-                <td style="padding: 12px; font-size: 14px; font-weight: 600;">Tiros a Puerta</td>
-                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${homeShots}</td>
-                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${awayShots}</td>
+                <td style="padding: 12px; border-bottom: 1px solid #1e293b; font-size: 14px; font-weight: 600;">Tiros a Puerta</td>
+                <td style="padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #fff;">${homeShots}</td>
+                <td style="padding: 12px; text-align: center; border-bottom: 1px solid #1e293b; font-weight: 800; color: #fff;">${awayShots}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px; font-size: 14px; font-weight: 600;">Córners</td>
+                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${homeCorners}</td>
+                <td style="padding: 12px; text-align: center; font-weight: 800; color: #fff;">${awayCorners}</td>
               </tr>
             </tbody>
           </table>
