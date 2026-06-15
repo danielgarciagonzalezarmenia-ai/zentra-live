@@ -17,6 +17,11 @@ const scrapeHeaders = {
   'Referer': 'https://www.365scores.com/'
 };
 
+// Health check endpoint for keeping server awake
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
 // 1. Get games by date
 app.get('/api/games', async (req, res) => {
   const { date } = req.query;
