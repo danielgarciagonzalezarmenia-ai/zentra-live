@@ -291,7 +291,7 @@ app.get('/api/competitor/:id/games', async (req, res) => {
 });
 
 // 12. Get athlete (player) games
-app.get('/api/athlete/:id/games', async (req, res) => {
+app.get('/api/player/:id/games', async (req, res) => {
   const { id } = req.params;
   try {
     const url = `https://webws.365scores.com/web/athletes/games/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&athleteId=${id}`;
@@ -304,8 +304,8 @@ app.get('/api/athlete/:id/games', async (req, res) => {
   }
 });
 
-// 12. Get athlete (player) details
-app.get('/api/athlete/:id', async (req, res) => {
+// 13. Get athlete (player) details
+app.get('/api/player/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const url = `https://webws.365scores.com/web/athletes/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&athletes=${id}`;

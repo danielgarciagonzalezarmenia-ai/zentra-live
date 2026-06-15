@@ -22,13 +22,13 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
       setNextMatch(null);
       try {
         // 1. Fetch player metadata
-        const response = await axios.get(`${API_BASE_URL}/api/athlete/${playerId}`);
+        const response = await axios.get(`${API_BASE_URL}/api/player/${playerId}`);
         setPlayerData(response.data);
         const player = response.data?.athletes?.[0];
 
         if (player) {
           // 2. Fetch player matches (games)
-          const gamesRes = await axios.get(`${API_BASE_URL}/api/athlete/${playerId}/games`).catch(() => ({ data: { games: [] } }));
+          const gamesRes = await axios.get(`${API_BASE_URL}/api/player/${playerId}/games`).catch(() => ({ data: { games: [] } }));
           const gamesList = gamesRes.data?.games || [];
           setAthleteGames(gamesList);
 
