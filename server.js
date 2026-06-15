@@ -430,11 +430,8 @@ async function checkLiveMatchesAndAlert() {
         const awayScore = game.awayCompetitor.score >= 0 ? game.awayCompetitor.score : 0;
         const diff = Math.abs(homeScore - awayScore);
         
-        // We want tight games: difference of 0 or 1.
-        if (diff <= 1) {
-          
-          // Fetch stats
-          const statsRes = await axios.get(`https://webws.365scores.com/web/game/stats/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&games=${game.id}`, { headers: scrapeHeaders }).catch(() => null);
+        // Fetch stats (We fetch stats if it's within the window regardless of goal diff, because corners don't care about goal diff as much, though tight games are better)
+        const statsRes = await axios.get(`https://webws.365scores.com/web/game/stats/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&games=${game.id}`, { headers: scrapeHeaders }).catch(() => null);
           
           if (statsRes && statsRes.data.statistics && statsRes.data.statistics[0]) {
             const stats = statsRes.data.statistics[0].statistics;
@@ -464,16 +461,26 @@ async function checkLiveMatchesAndAlert() {
               }
             });
             
-            // Criteria for domination
-            const homeDomination = homeAttacks >= 50 && homeShots >= 4 && homePoss >= 55;
-            const awayDomination = awayAttacks >= 50 && awayShots >= 4 && awayPoss >= 55;
+            // 1. Criteria for Goal (Dominio Extremo)
+            const homeDomination = homeAttacks >= 50 && homeShots >= 4 && homePoss >= 55 && diff <= 1 && minute >= 60 && minute <= 85;
+            const awayDomination = awayAttacks >= 50 && awayShots >= 4 && awayPoss >= 55 && diff <= 1 && minute >= 60 && minute <= 85;
             
+            // 2. Criteria for Corners (Partido Roto / Ritmo Alto)
+            const highPace = (homeAttacks + awayAttacks) >= 100 && (homeCorners + awayCorners) >= 8 && minute >= 75 && minute <= 85;
+
+            let alertType = null;
+            let dominatingTeam = null;
+
             if (homeDomination || awayDomination) {
-              const dominatingTeam = homeDomination ? game.homeCompetitor.name : game.awayCompetitor.name;
-              const dominatedTeam = homeDomination ? game.awayCompetitor.name : game.homeCompetitor.name;
-              
-              console.log(`[ALERTA RADAR] ${dominatingTeam} está dominando a ${dominatedTeam}! Minuto: ${minute}`);
-              await sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute);
+              alertType = 'goal';
+              dominatingTeam = homeDomination ? game.homeCompetitor.name : game.awayCompetitor.name;
+            } else if (highPace) {
+              alertType = 'corner';
+            }
+            
+            if (alertType) {
+              console.log(`[ALERTA RADAR] Tipo: ${alertType} para el partido ${game.homeCompetitor.name} vs ${game.awayCompetitor.name}! Minuto: ${minute}`);
+              await sendPremiumAlertEmails(alertType, game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute);
               notifiedMatches.add(game.id);
             }
           }
@@ -485,7 +492,7 @@ async function checkLiveMatchesAndAlert() {
   }
 }
 
-async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute) {
+async function sendPremiumAlertEmails(alertType, game, dominatingTeam, homeScore, awayScore, homeAttacks, awayAttacks, homeShots, awayShots, homeCorners, awayCorners, minute) {
   if (!dbAdmin) return;
   
   try {
@@ -499,6 +506,18 @@ async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore
     
     if (emails.length === 0) return;
     
+    let sugTitle = '';
+    let sugBody = '';
+    
+    if (alertType === 'goal') {
+      sugTitle = '🔥 SUGERENCIA: GOL INMINENTE';
+      sugBody = `El <strong>${dominatingTeam}</strong> está generando una presión extrema sobre el rival. Recomendamos apostar a <strong>Próximo Gol</strong> o <strong>Over de Goles</strong>.`;
+    } else {
+      const currentCorners = homeCorners + awayCorners;
+      sugTitle = '⛳ SUGERENCIA: OVER DE CÓRNERS';
+      sugBody = `El partido tiene un ritmo frenético con mucha ida y vuelta. Recomendamos apostar a <strong>Más de ${currentCorners + 0.5} o ${currentCorners + 1.5} Córners</strong> totales.`;
+    }
+
     // 2. Build HTML Template
     const htmlTemplate = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #0f172a; color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #1e293b;">
@@ -524,8 +543,8 @@ async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore
           </div>
           
           <div style="background: rgba(13, 240, 163, 0.1); border-left: 4px solid #0df0a3; padding: 16px; border-radius: 4px 8px 8px 4px; margin-bottom: 24px;">
-            <h3 style="color: #0df0a3; margin: 0 0 8px 0; font-size: 18px;">🔥 SUGERENCIA: GOL INMINENTE O CÓRNERS</h3>
-            <p style="color: #cbd5e1; margin: 0; font-size: 15px; line-height: 1.5;">El <strong>${dominatingTeam}</strong> está generando una presión extrema sobre el rival. Recomendamos apostar a <strong>Próximo Gol</strong>, <strong>Over de Goles</strong> o <strong>Próximo Córner</strong>.</p>
+            <h3 style="color: #0df0a3; margin: 0 0 8px 0; font-size: 18px;">${sugTitle}</h3>
+            <p style="color: #cbd5e1; margin: 0; font-size: 15px; line-height: 1.5;">${sugBody}</p>
           </div>
           
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; background: rgba(255,255,255,0.02); border-radius: 8px; overflow: hidden;">
@@ -566,7 +585,9 @@ async function sendPremiumAlertEmails(game, dominatingTeam, homeScore, awayScore
     const mailOptions = {
       from: '"ZENTRA Premium Radar" <' + process.env.EMAIL_USER + '>',
       bcc: emails.join(','), // bcc para no revelar los correos entre sí
-      subject: `🔥 ALERTA DE GOL: ${game.homeCompetitor.name} vs ${game.awayCompetitor.name}`,
+      subject: alertType === 'goal' 
+        ? `🔥 ALERTA DE GOL: ${game.homeCompetitor.name} vs ${game.awayCompetitor.name}`
+        : `⛳ ALERTA DE CÓRNERS: ${game.homeCompetitor.name} vs ${game.awayCompetitor.name}`,
       html: htmlTemplate
     };
 
