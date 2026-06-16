@@ -211,6 +211,22 @@ app.get('/api/game/:id/stats', async (req, res) => {
   }
 });
 
+// 3.5 Get pre-game stats (win %, btts, average goals, etc)
+app.get('/api/game/:id/prematch-stats', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const url = `https://webws.365scores.com/web/stats/preGame?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=109&game=${id}`;
+    console.log(`Fetching pre-match stats for game ID: ${id}`);
+    const response = await axios.get(url, { headers: scrapeHeaders });
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error(`Error fetching pre-match stats for ID ${id}:`, error.message);
+    res.status(500).json({ error: 'Error al obtener las estadísticas pre-partido.', message: error.message });
+  }
+});
+
 // 4. Get game trends (Top Trends and All Trends)
 app.get('/api/game/:id/trends', async (req, res) => {
   const { id } = req.params;

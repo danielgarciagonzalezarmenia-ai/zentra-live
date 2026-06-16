@@ -351,6 +351,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                 <>
                   {(game.statusGroup === 1 || game.statusGroup === 2) ? (
                     <PreMatchStats 
+                      gameId={game.id}
                       homeCompetitor={gameDetails?.game?.homeCompetitor} 
                       awayCompetitor={gameDetails?.game?.awayCompetitor} 
                     />
