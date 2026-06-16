@@ -99,10 +99,10 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
       return <img src="/icons/events/red-card.png" alt="Tarjeta Roja" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
     }
     if (isPost) {
-      return <img src="/icons/events/post.png" alt="Palo" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+      return <img src="/icons/events/post.png" alt="Palo" style={{ width: '26px', height: '26px', objectFit: 'contain' }} />;
     }
     if (id === 1000 || type.includes('sub') || type.includes('sust') || type.includes('change')) {
-      return <img src="/icons/events/sub.png" alt="Sustitución" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+      return <img src="/icons/events/sub.png" alt="Sustitución" style={{ width: '26px', height: '26px', objectFit: 'contain' }} />;
     }
     
     return <HelpCircle size={16} color="var(--text-muted)" />;
