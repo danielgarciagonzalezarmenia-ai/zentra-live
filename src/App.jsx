@@ -367,19 +367,20 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '0 16px', display: 'flex', justifyContent: 'center', width: '100%', boxSizing: 'border-box' }}>
+      <main style={{ flex: 1, padding: '0 16px', display: 'flex', justifyContent: 'center', width: '100%', boxSizing: 'border-box', minWidth: 0 }}>
         <div style={{ 
           display: 'flex', 
           width: '100%', 
           maxWidth: isDesktop ? '1400px' : '800px', 
           gap: '24px',
-          alignItems: 'flex-start'
+          alignItems: 'flex-start',
+          minWidth: 0
         }}>
           
           {/* Left Column - Match List */}
-          <div style={{ flex: isDesktop ? '0 0 45%' : '1 1 100%', maxWidth: isDesktop ? '600px' : '800px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ flex: isDesktop ? '0 0 45%' : '1 1 100%', maxWidth: isDesktop ? '600px' : '800px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
             {/* Controles de Ligas (Solo se muestra el título Ligas Populares si está seleccionado, de lo contrario todo) */}
-            <div className="glass-panel" style={{ padding: '16px 20px', margin: '0 16px 16px 16px', display: 'flex', alignItems: 'center', gap: '12px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+            <div className="glass-panel" style={{ padding: '16px 20px', margin: '0 16px 16px 16px', display: 'flex', alignItems: 'center', gap: '12px', overflowX: 'auto', scrollbarWidth: 'none', maxWidth: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '12px', borderRight: '1px solid var(--border-color)', flexShrink: 0 }}>
                 <Trophy size={18} color="var(--accent-emerald)" />
                 <span style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
