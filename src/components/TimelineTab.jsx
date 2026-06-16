@@ -274,8 +274,10 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                 {/* Floating Minute Tag */}
                 <div style={{
                   position: 'absolute',
-                  left: '50%',
-                  transform: 'translate(-50%, -42px)',
+                  top: '50%',
+                  left: isHome ? 'calc(50% + 24px)' : 'auto',
+                  right: !isHome ? 'calc(50% + 24px)' : 'auto',
+                  transform: 'translateY(-50%)',
                   fontSize: '10px',
                   fontWeight: '800',
                   color: 'var(--accent-emerald)',
@@ -283,7 +285,8 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
                   padding: '2px 6px',
                   borderRadius: '0',
                   border: '1px solid var(--border-color)',
-                  pointerEvents: 'none'
+                  pointerEvents: 'none',
+                  zIndex: 4
                 }}>
                   {gameTimeStr}
                 </div>

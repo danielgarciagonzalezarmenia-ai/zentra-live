@@ -294,10 +294,10 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     style={{
-                      flex: 1,
+                      flex: '0 0 auto',
                       minWidth: '140px',
                       flexShrink: 0,
-                      padding: '16px 6px',
+                      padding: '16px 20px',
                       background: 'transparent',
                       border: 'none',
                       color: isSelected ? 'var(--accent-emerald)' : 'var(--text-secondary)',
