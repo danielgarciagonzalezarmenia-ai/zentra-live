@@ -76,7 +76,7 @@ export default function PredictionsModal({ onClose, user, onOpenModal, selectedD
           results.push(...batchResults.filter(Boolean));
         }
 
-        results.sort((a, b) => b.pick.percentage - a.pick.percentage);
+        results.sort((a, b) => b.pick.confidence - a.pick.confidence);
         setPredictions(results);
       } catch (err) {
         console.error("Error fetching global predictions", err);
@@ -179,7 +179,7 @@ export default function PredictionsModal({ onClose, user, onOpenModal, selectedD
                   fontSize: '14px', 
                   fontWeight: '800' 
                 }}>
-                  {pick.percentage}% Seguro
+                  {pick.confidence}% Seguro
                 </div>
               </div>
 
@@ -192,10 +192,10 @@ export default function PredictionsModal({ onClose, user, onOpenModal, selectedD
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
                   <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Pronóstico del Algoritmo</div>
                   <div style={{ fontSize: '15px', fontWeight: '800', color: 'var(--accent-cyan)', textAlign: 'right' }}>
-                    {pick.title}
+                    {pick.text}
                   </div>
                   <div style={{ fontSize: '12px', color: 'var(--warning)', fontWeight: '700' }}>
-                    Cuota: {pick.rate}
+                    Cuota: {pick.odds}
                   </div>
                 </div>
                 <ChevronRight size={20} color="var(--border-color)" style={{ marginLeft: '12px' }} />
