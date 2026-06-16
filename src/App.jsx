@@ -4,7 +4,6 @@ import MatchCard from './components/MatchCard';
 import MatchDetails from './components/MatchDetails';
 import LeagueDetails from './components/LeagueDetails';
 import TeamDetails from './components/TeamDetails';
-import PredictionsModal from './components/PredictionsModal';
 import axios from 'axios';
 import confetti from 'canvas-confetti';
 import { ShieldAlert, CalendarClock, Trophy } from 'lucide-react';
@@ -527,8 +526,6 @@ export default function App() {
                     return <LeagueDetails leagueId={activeModal.id} onClose={goBack} onClear={closeAll} onOpenModal={openModal} isInline={true} />;
                   case 'team':
                     return <TeamDetails teamId={activeModal.id} onClose={goBack} onClear={closeAll} onOpenModal={openModal} isInline={true} />;
-                  case 'predictions':
-                    return <PredictionsModal selectedDate={selectedDate} user={user} onClose={goBack} onOpenModal={openModal} />;
                   default:
                     return null;
                 }
@@ -579,8 +576,6 @@ export default function App() {
                 onOpenModal={openModal}
               />
             );
-          case 'predictions':
-            return <PredictionsModal selectedDate={selectedDate} user={user} onClose={goBack} onOpenModal={openModal} />;
           default:
             return null;
         }
