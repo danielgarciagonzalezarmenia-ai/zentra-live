@@ -1,10 +1,10 @@
-import React from 'react';
-import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap, Mail, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap, Mail, ShieldCheck, CheckCircle2, XCircle, Clock } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { getBestPick, evaluatePickStatus } from '../utils/predict';
 
-export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
+export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }) {
   const isPremium = user?.isPremium;
   const [loadingPayment, setLoadingPayment] = useState(false);
 
@@ -135,22 +135,11 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
         className="glass-panel" 
         style={{ 
           padding: '16px 20px', 
-          border: '1px solid var(--border-color)', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between', 
           gap: '16px', 
           flexWrap: 'wrap',
-          background: 'rgba(255,255,255,0.01)',
-          transition: 'all 0.2s ease'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-          e.currentTarget.style.background = 'var(--border-color)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.borderColor = 'var(--border-color)';
-          e.currentTarget.style.background = 'rgba(255,255,255,0.01)';
         }}
       >
         {/* Left: Trend description and confidence percentage */}
@@ -235,12 +224,61 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
       </div>
     );
   };
+  const sortedByOddsTrends = Array.from(uniqueMap.values()).sort((a, b) => getTrendRate(b) - getTrendRate(a));
+
+  // Predictive Algorithm
+  const bestPick = getBestPick(trendsData, game);
+  const pickStatus = evaluatePickStatus(bestPick, game);
+
+  const renderPickStatus = () => {
+    if (pickStatus === 'WON') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><CheckCircle2 size={12}/> GANADO</div>;
+    if (pickStatus === 'LOST') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><XCircle size={12}/> PERDIDO</div>;
+    if (game?.statusGroup === 4) return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> FINALIZADO</div>;
+    return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> EN JUEGO</div>;
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '16px 8px' }}>
+    <div style={{ padding: '16px 8px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
-      {/* Todas las Tendencias Unificadas */}
+      {/* ZENTRA Predictor Card */}
+      {bestPick && (
+        <div style={{ background: 'linear-gradient(135deg, rgba(13,240,163,0.1) 0%, rgba(14,165,233,0.1) 100%)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(13,240,163,0.3)', position: 'relative', overflow: 'hidden' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <Zap size={18} color="var(--accent-emerald)" />
+                <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '900', color: 'var(--text-primary)' }}>ALGORITMO ZENTRA</h3>
+              </div>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Mejor oportunidad encontrada matemáticamente</span>
+            </div>
+            {renderPickStatus()}
+          </div>
+
+          <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '12px', padding: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '18px', fontWeight: '800', color: '#fff' }}>{bestPick.text}</span>
+              {bestPick.odds && (
+                <div style={{ background: 'var(--accent-emerald)', color: '#000', padding: '4px 10px', borderRadius: '6px', fontWeight: '900', fontSize: '14px' }}>
+                  {bestPick.odds}
+                </div>
+              )}
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Nivel de Confianza Algorítmica</span>
+                <span style={{ color: bestPick.confidence > 80 ? 'var(--warning)' : 'var(--accent-emerald)' }}>{bestPick.confidence}%</span>
+              </div>
+              <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ width: `${bestPick.confidence}%`, height: '100%', background: bestPick.confidence > 80 ? 'var(--warning)' : 'var(--accent-emerald)', borderRadius: '4px' }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {/* Título de tendencias */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', borderBottom: '1px solid var(--border-color)', paddingBottom: '10px' }}>
           <Target size={16} color="var(--accent-emerald)" />
           <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
@@ -252,7 +290,7 @@ export default function TrendsTab({ trendsData, homeTeam, awayTeam, user }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {sortedTrends.map(t => renderTrendCard(t))}
+          {sortedByOddsTrends.map(t => renderTrendCard(t))}
         </div>
       </div>
 

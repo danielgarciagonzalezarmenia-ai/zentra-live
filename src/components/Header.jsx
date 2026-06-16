@@ -310,26 +310,6 @@ export default function Header({
             <RefreshCw size={16} className={loading ? 'skeleton' : ''} style={{ animation: loading ? 'skeleton-glow 1s infinite' : 'none' }} />
           </button>
 
-          {/* Theme Toggle Button */}
-          <button 
-            onClick={toggleTheme}
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              border: '1px solid var(--border-color)',
-              background: 'var(--border-color)',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            title="Cambiar tema"
-          >
-            {theme === 'dark' ? <Sun size={16} color="var(--warning)" /> : <Moon size={16} color="var(--accent-blue)" />}
-          </button>
 
           {/* Firebase Authentication Area */}
           {authLoading ? (
@@ -539,8 +519,8 @@ export default function Header({
       </div>
 
       {/* Date Slider Selector */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
-        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', flex: 1, paddingBottom: '4px', scrollbarWidth: 'none' }} className="date-slider">
+      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', width: '100%' }}>
+        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', flex: 1, paddingBottom: '4px', scrollbarWidth: 'none' }} className="date-slider">
           {days.map((d, idx) => {
             const formatted = formatDateString(d);
             const isSelected = formatted === selectedDate;
@@ -551,8 +531,8 @@ export default function Header({
                 key={idx}
                 onClick={() => setSelectedDate(formatted)}
                 style={{
-                  minWidth: '65px',
-                  padding: '8px 12px',
+                  minWidth: '46px',
+                  padding: '6px 8px',
                   borderRadius: '12px',
                   border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid transparent',
                   background: isSelected ? 'rgba(13, 240, 163, 0.08)' : 'var(--border-color)',
@@ -561,21 +541,16 @@ export default function Header({
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '4px',
+                  gap: '2px',
                   transition: 'all 0.2s ease'
                 }}
               >
-                <span style={{ fontSize: '9px', fontWeight: '700', color: isSelected ? 'var(--accent-emerald)' : 'var(--text-muted)' }}>
+                <span style={{ fontSize: '8px', fontWeight: '700', color: isSelected ? 'var(--accent-emerald)' : 'var(--text-muted)' }}>
                   {getDayName(d)}
                 </span>
-                <span style={{ fontSize: '16px', fontWeight: '800' }}>
+                <span style={{ fontSize: '15px', fontWeight: '800' }}>
                   {d.getDate()}
                 </span>
-                {isToday && (
-                  <span style={{ fontSize: '7px', fontWeight: '800', background: 'var(--bg-secondary)', padding: '2px 4px', borderRadius: '4px', border: '1px solid var(--border-color)' }}>
-                    HOY
-                  </span>
-                )}
               </button>
             );
           })}
