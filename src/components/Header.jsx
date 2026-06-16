@@ -106,16 +106,10 @@ export default function Header({
 
   return (
     <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '800px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
-      {/* Brand & Stats Button */}
+      {/* Brand & Search */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
-          <div>
-            <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, #ffffff 0%, var(--text-secondary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              ZENTRA
-            </h1>
-            <span style={{ fontSize: '10px', color: 'var(--accent-emerald)', fontWeight: '700', letterSpacing: '1px' }}>LIVE SOCCER DATA</span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ height: '48px', width: 'auto', maxWidth: '180px', objectFit: 'contain' }} />
         </div>
 
         {/* Search Engine */}
