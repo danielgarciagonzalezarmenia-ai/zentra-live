@@ -11,12 +11,7 @@ import {
   Info 
 } from 'lucide-react';
 
-const SoccerBallIcon = () => (
-  <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
-    <circle cx="12" cy="12" r="10" />
-    <path d="m12 2-1.9 3.4L6.8 5M12 22l1.9-3.4 3.3.4M2 12l3.4 1.9.4 3.3M22 12l-3.4-1.9-.4-3.3M6.8 5l1.7 4.2-3.4 2.8M17.2 19l-1.7-4.2 3.4-2.8M17.2 5l-1.7 4.2 1.7 4.2M6.8 19l1.7-4.2-1.7-4.2" />
-  </svg>
-);
+// Eliminado SoccerBallIcon
 
 export default function TimelineTab({ events, members, homeId, awayId, gameDetails, onOpenModal }) {
   // Map player IDs to details
@@ -73,31 +68,44 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
   // Helper to render event icon
   const getEventIcon = (event) => {
     const type = event.eventType.name.toLowerCase();
+    const subType = event.eventType.subTypeName ? event.eventType.subTypeName.toLowerCase() : '';
     const id = event.eventType.id;
 
+    const isPen = subType.includes('penal');
+    const isOG = subType.includes('contra') || subType.includes('own');
+    const isMissedPen = type.includes('miss') && type.includes('penal');
+    const isPost = type.includes('post') || type.includes('palo') || type.includes('woodwork');
+    const isSecondYellow = type.includes('second yellow') || type.includes('doble amarilla');
+
+    if (isOG) {
+      return <img src="/icons/events/own-goal.png" alt="Autogol" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+    }
+    if (isMissedPen) {
+      return <img src="/icons/events/missed-penalty.png" alt="Penal Fallado" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+    }
+    if (isPen) {
+      return <img src="/icons/events/penalty-goal.png" alt="Gol de Penal" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+    }
     if (id === 1 || type.includes('gol') || type.includes('goal')) {
-      return (
-        <div style={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} title="Gol">
-          <SoccerBallIcon />
-        </div>
-      );
+      return <img src="/icons/events/goal.png" alt="Gol" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+    }
+    if (isSecondYellow) {
+      return <img src="/icons/events/second-yellow.png" alt="Doble Amarilla" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
     }
     if (type.includes('amarilla') || type.includes('yellow')) {
-      return (
-        <div style={{ width: '12px', height: '16px', backgroundColor: '#eab308', borderRadius: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }} title="Tarjeta Amarilla" />
-      );
+      return <img src="/icons/events/yellow-card.png" alt="Tarjeta Amarilla" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
     }
     if (type.includes('roja') || type.includes('red')) {
-      return (
-        <div style={{ width: '12px', height: '16px', backgroundColor: '#ef4444', borderRadius: '0', boxShadow: '0 2px 4px rgba(0,0,0,0.3)' }} title="Tarjeta Roja" />
-      );
+      return <img src="/icons/events/red-card.png" alt="Tarjeta Roja" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
+    }
+    if (isPost) {
+      return <img src="/icons/events/post.png" alt="Palo" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
     }
     if (id === 1000 || type.includes('sub') || type.includes('sust') || type.includes('change')) {
-      return (
-        <ArrowLeftRight size={14} color="#10b981" title="Cambio" />
-      );
+      return <img src="/icons/events/sub.png" alt="Sustitución" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />;
     }
-    return <HelpCircle size={14} color="var(--text-muted)" />;
+    
+    return <HelpCircle size={16} color="var(--text-muted)" />;
   };
 
   // Helper to build descriptive text for events
