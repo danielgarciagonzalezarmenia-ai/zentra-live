@@ -1,4 +1,5 @@
 import React from 'react';
+import { translate } from '../utils/translations';
 import { 
   ArrowLeftRight, 
   HelpCircle, 
@@ -178,7 +179,7 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
           {playerName}
         </strong>
         <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-          {event.eventType.name}
+          {translate(event.eventType.name)}
         </div>
       </div>
     );

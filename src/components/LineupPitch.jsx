@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { translate } from '../utils/translations';
 
 export default function LineupPitch({ gameDetails, onOpenModal }) {
   const homeLineup = gameDetails.game?.homeCompetitor?.lineups;
@@ -81,7 +82,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               key={player.id} 
               className="player-node" 
               style={{ left: pos.left, top: pos.top, cursor: 'pointer' }}
-              title={`${details.name || 'Player'} (${player.position?.name || ''})`}
+              title={`${details.name || 'Player'} (${translate(player.position?.name) || ''})`}
               onClick={() => onOpenModal('player', player.id)}
             >
               <div className={`player-jersey ${isGK ? 'goalkeeper' : ''}`}>
@@ -108,7 +109,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               key={player.id} 
               className="player-node" 
               style={{ left: pos.left, top: pos.top, cursor: 'pointer' }}
-              title={`${details.name || 'Player'} (${player.position?.name || ''})`}
+              title={`${details.name || 'Player'} (${translate(player.position?.name) || ''})`}
               onClick={() => onOpenModal('player', player.id)}
             >
               <div className={`player-jersey away ${isGK ? 'goalkeeper' : ''}`}>
@@ -255,7 +256,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
                       </span>
                       <span>{details.shortName || details.name}</span>
                       <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                        {s.position?.shortName ? `(${s.position.shortName})` : ''}
+                        {s.position?.shortName ? `(${translate(s.position.shortName)})` : ''}
                       </span>
                     </div>
                   );
@@ -282,7 +283,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
                       </span>
                       <span>{details.shortName || details.name}</span>
                       <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                        {s.position?.shortName ? `(${s.position.shortName})` : ''}
+                        {s.position?.shortName ? `(${translate(s.position.shortName)})` : ''}
                       </span>
                     </div>
                   );

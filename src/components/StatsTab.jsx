@@ -1,5 +1,6 @@
 import React from 'react';
 import { Target } from 'lucide-react';
+import { translate } from '../utils/translations';
 
 export default function StatsTab({ statsList, homeId, awayId }) {
   
@@ -20,9 +21,9 @@ export default function StatsTab({ statsList, homeId, awayId }) {
     if (!statsById[stat.id]) {
       statsById[stat.id] = { 
         id: stat.id, 
-        name: stat.name, 
+        name: translate(stat.name), 
         categoryId: stat.categoryId,
-        categoryName: stat.categoryName || 'General',
+        categoryName: translate(stat.categoryName || 'General'),
         homeValue: null, 
         awayValue: null 
       };

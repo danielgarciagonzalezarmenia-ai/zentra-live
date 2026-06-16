@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Activity } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
+import { translate } from '../utils/translations';
 
 export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }) {
   const [loading, setLoading] = useState(true);
@@ -47,7 +48,7 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
   const statsById = {};
   data.statistics.forEach(stat => {
     if (!statsById[stat.id]) {
-      statsById[stat.id] = { id: stat.id, name: stat.name, group: stat.statisticGroup, home: null, away: null };
+      statsById[stat.id] = { id: stat.id, name: translate(stat.name), group: stat.statisticGroup, home: null, away: null };
     }
     if (stat.competitorId === homeCompetitor.id) {
       statsById[stat.id].home = stat;
