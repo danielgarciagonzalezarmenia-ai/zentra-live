@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown, Sun, Moon } from 'lucide-react';
+import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown, Sun, Moon, Download, Share, PlusSquare } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
@@ -29,6 +29,47 @@ export default function Header({
   const [searchLoading, setSearchLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showUserDropdown, setShowUserDropdown] = useState(false);
+
+  // PWA State
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [showIOSPrompt, setShowIOSPrompt] = useState(false);
+
+  useEffect(() => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
+    setIsIOS(isIosDevice);
+
+    const isAppStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    setIsStandalone(isAppStandalone);
+
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async (e) => {
+    e.stopPropagation();
+    if (isIOS) {
+      setShowIOSPrompt(true);
+      return;
+    }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
 
   useEffect(() => {
     if (!searchQuery.trim()) {
@@ -260,6 +301,30 @@ export default function Header({
 
         {/* Global Live Filter, Refresh & Auth */}
         <div className="header-tools" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          
+          {!isStandalone && (deferredPrompt || isIOS) && (
+            <button 
+              onClick={handleInstallClick}
+              style={{
+                padding: '8px 16px',
+                borderRadius: '20px',
+                border: 'none',
+                background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)',
+                color: '#000',
+                fontSize: '13px',
+                fontWeight: '800',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: '0 0 15px rgba(13, 240, 163, 0.4)',
+                transition: 'transform 0.2s ease'
+              }}
+            >
+              <Download size={14} />
+              <span className="hide-on-mobile">Instalar App</span>
+            </button>
+          )}
           <button 
             onClick={() => setFilterLive(!filterLive)}
             style={{
@@ -577,6 +642,63 @@ export default function Header({
           />
         </div>
       </div>
+
+      {/* iOS Install Prompt Modal */}
+      {showIOSPrompt && (
+        <div 
+          onClick={() => setShowIOSPrompt(false)}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0, right: 0, bottom: 0,
+            background: 'rgba(0,0,0,0.8)',
+            zIndex: 10000,
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            padding: '20px'
+          }}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-secondary)',
+              padding: '24px',
+              borderRadius: '20px',
+              border: '1px solid var(--border-color)',
+              maxWidth: '400px',
+              width: '100%',
+              textAlign: 'center',
+              boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
+              position: 'relative'
+            }}
+          >
+            <button 
+              onClick={() => setShowIOSPrompt(false)}
+              style={{ position: 'absolute', top: '16px', right: '16px', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '20px' }}
+            >✕</button>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)' }}>Instalar ZENTRA en iPhone</h3>
+            <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
+              Para instalar la aplicación en tu pantalla de inicio, sigue estos dos sencillos pasos:
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <Share size={20} color="var(--accent-cyan)" />
+                <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>1. Toca el botón <b>Compartir</b> en el menú de navegación abajo.</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <PlusSquare size={20} color="var(--accent-emerald)" />
+                <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>2. Selecciona <b>"Agregar a inicio"</b> en la lista de opciones.</span>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowIOSPrompt(false)}
+              style={{ width: '100%', marginTop: '20px', padding: '12px', borderRadius: '12px', background: 'var(--border-color)', color: 'var(--text-primary)', border: 'none', fontWeight: '700', cursor: 'pointer' }}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
 
     </header>
   );

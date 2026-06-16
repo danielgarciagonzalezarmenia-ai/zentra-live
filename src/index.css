@@ -406,4 +406,5 @@ h1, h2, h3, h4, h5, h6 {
   .header-brand { order: 1; }
   .header-tools { order: 2; margin-left: auto; }
   .header-search { order: 3; width: 100% !important; min-width: 100% !important; max-width: 100% !important; margin-top: 8px; }
+  .hide-on-mobile { display: none !important; }
 }
