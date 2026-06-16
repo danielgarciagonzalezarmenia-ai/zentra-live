@@ -70,7 +70,7 @@ app.get('/api/games', async (req, res) => {
   }
 
   try {
-    const url = `https://webws.365scores.com/web/games/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&startDate=${date}&endDate=${date}`;
+    const url = `https://webws.365scores.com/web/games/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&startDate=${date}&endDate=${date}&_=${Date.now()}`;
     console.log(`Fetching games for date: ${date}`);
     const response = await axios.get(url, { headers: scrapeHeaders });
 
@@ -92,7 +92,7 @@ app.get('/api/game/:id', async (req, res) => {
   const { id } = req.params;
   
   try {
-    const url = `https://webws.365scores.com/web/game/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&gameId=${id}`;
+    const url = `https://webws.365scores.com/web/game/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&gameId=${id}&_=${Date.now()}`;
     console.log(`Fetching game details for ID: ${id}`);
     const response = await axios.get(url, { headers: scrapeHeaders });
     

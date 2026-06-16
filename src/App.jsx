@@ -164,7 +164,7 @@ export default function App() {
       setError(null);
     }
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/games?date=${selectedDate}`);
+      const response = await axios.get(`${API_BASE_URL}/api/games?date=${selectedDate}&_=${Date.now()}`);
       const data = response.data;
       
       const newGames = data.games || [];

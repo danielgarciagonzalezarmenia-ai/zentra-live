@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutList, Users, BarChart3, Code, TrendingUp, Target } from 'lucide-react';
+import { LayoutList, Users, BarChart3, Target, Crosshair } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import TimelineTab from './TimelineTab';
@@ -20,54 +20,74 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
   useEffect(() => {
     if (!matchId) return;
     
-    const fetchAllData = async () => {
-      setLoading(true);
-      setError(null);
+    const fetchAllData = async (silent = false) => {
+      if (!silent) {
+        setLoading(true);
+        setError(null);
+      }
       try {
-        // Fetch details, stats, firebase trends, and proxy trends CONCURRENTLY for maximum speed
         const trendDocRef = doc(db, 'game_trends', matchId.toString());
-        const [detailsRes, statsRes, trendSnap, proxyTrendsRes] = await Promise.all([
-          axios.get(`${API_BASE_URL}/api/game/${matchId}`),
-          axios.get(`${API_BASE_URL}/api/game/${matchId}/stats`),
-          getDoc(trendDocRef).catch((e) => { console.error('Firebase error:', e); return null; }),
-          axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
-        ]);
+        
+        // Si es silent, solo actualizamos detalles y stats
+        let detailsRes, statsRes, trendSnap, proxyTrendsRes;
+        
+        if (silent) {
+          [detailsRes, statsRes] = await Promise.all([
+            axios.get(`${API_BASE_URL}/api/game/${matchId}?_=${Date.now()}`),
+            axios.get(`${API_BASE_URL}/api/game/${matchId}/stats?_=${Date.now()}`)
+          ]);
+        } else {
+          [detailsRes, statsRes, trendSnap, proxyTrendsRes] = await Promise.all([
+            axios.get(`${API_BASE_URL}/api/game/${matchId}?_=${Date.now()}`),
+            axios.get(`${API_BASE_URL}/api/game/${matchId}/stats?_=${Date.now()}`),
+            getDoc(trendDocRef).catch((e) => { console.error('Firebase error:', e); return null; }),
+            axios.get(`${API_BASE_URL}/api/game/${matchId}/trends`).catch(() => ({ data: { trends: [] } }))
+          ]);
+        }
 
         const gameData = detailsRes.data?.game || {};
-        const startTime = new Date(gameData.startTime);
-        const now = new Date();
-        const diffMins = (startTime - now) / 1000 / 60;
         
-        // Congelar si faltan 30 mins o menos, o si el partido ya no está "Not Started" (statusGroup !== 1)
-        const isFrozenWindow = diffMins <= 30 || gameData.statusGroup !== 1;
+        if (!silent) {
+          const startTime = new Date(gameData.startTime);
+          const now = new Date();
+          const diffMins = (startTime - now) / 1000 / 60;
+          
+          const isFrozenWindow = diffMins <= 30 || gameData.statusGroup !== 1;
+          let finalTrends = null;
 
-        let finalTrends = null;
-
-        if (isFrozenWindow) {
-           if (trendSnap && trendSnap.exists()) {
-              finalTrends = trendSnap.data();
-           } else {
-              finalTrends = proxyTrendsRes.data;
-              if (finalTrends?.trends?.length > 0) {
-                 await setDoc(trendDocRef, finalTrends).catch(e => console.error('Firebase write error:', e));
-              }
-           }
-        } else {
-           finalTrends = proxyTrendsRes.data;
+          if (isFrozenWindow) {
+             if (trendSnap && trendSnap.exists()) {
+                finalTrends = trendSnap.data();
+             } else {
+                finalTrends = proxyTrendsRes.data;
+                if (finalTrends?.trends?.length > 0) {
+                   await setDoc(trendDocRef, finalTrends).catch(e => console.error('Firebase write error:', e));
+                }
+             }
+          } else {
+             finalTrends = proxyTrendsRes.data;
+          }
+          setTrendsData(finalTrends);
         }
 
         setGameDetails(detailsRes.data);
         setStatsData(statsRes.data);
-        setTrendsData(finalTrends);
       } catch (err) {
         console.error('Error fetching details:', err);
-        setError('No se pudieron cargar los detalles de este partido.');
+        if (!silent) setError('No se pudieron cargar los detalles de este partido.');
       } finally {
-        setLoading(false);
+        if (!silent) setLoading(false);
       }
     };
 
-    fetchAllData();
+    fetchAllData(false);
+
+    // Auto-refresh data every 15 seconds for live matches
+    const interval = setInterval(() => {
+      fetchAllData(true);
+    }, 15000);
+
+    return () => clearInterval(interval);
   }, [matchId]);
 
   if (!matchId) return null;
@@ -290,6 +310,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
               {activeTab === 'trends' && (
                 <TrendsTab 
                   trendsData={trendsData} 
+                  game={gameDetails?.game}
                   homeTeam={gameDetails?.homeCompetitor} 
                   awayTeam={gameDetails?.awayCompetitor} 
                   user={user}
