@@ -121,7 +121,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal,
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
                 padding: '8px 16px', 
-                borderRadius: '12px', 
+                borderRadius: '0', 
                 cursor: 'pointer', 
                 fontSize: '13px', 
                 fontWeight: '600' 
@@ -233,7 +233,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal,
                     Object.keys(groupMap).map(gNum => {
                       const group = groupMap[gNum];
                       return (
-                        <div key={gNum} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div key={gNum} className="glass-panel" style={{ padding: '16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--accent-emerald)', margin: 0 }}>
                             {group.name}
                           </h3>
@@ -293,7 +293,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal,
                     })
                   ) : (
                     // Render Single Table (e.g. League)
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
                       <div style={{ overflowX: 'auto' }}>
                         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '550px' }}>
                           <thead>
@@ -352,12 +352,12 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal,
 
                   {/* Destinations Legend */}
                   {destinations.length > 0 && (
-                    <div className="glass-panel" style={{ padding: '14px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div className="glass-panel" style={{ padding: '14px 16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Zonas de Clasificación</span>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px' }}>
                         {destinations.map(dest => (
                           <div key={dest.num} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>
-                            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: dest.color }} />
+                            <span style={{ width: '8px', height: '8px', borderRadius: '0', backgroundColor: dest.color }} />
                             <span>{dest.name}</span>
                           </div>
                         ))}
@@ -370,13 +370,13 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal,
               {activeTab === 'stats' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   {athletesStats.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>Estadísticas no disponibles para este torneo.</p>
                     </div>
                   ) : (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                       {athletesStats.slice(0, 6).map((category, idx) => (
-                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                           <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                             {category.name}
                           </h4>

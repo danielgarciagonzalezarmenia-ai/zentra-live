@@ -261,7 +261,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
   const renderSkeleton = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '24px', maxWidth: '800px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
       <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-        <div className="skeleton" style={{ width: '80px', height: '80px', borderRadius: '50%' }} />
+        <div className="skeleton" style={{ width: '80px', height: '80px', borderRadius: '0' }} />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
           <div className="skeleton" style={{ height: '24px', width: '150px' }} />
           <div className="skeleton" style={{ height: '16px', width: '100px' }} />
@@ -298,7 +298,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
               border: '1px solid var(--border-color)', 
               color: 'var(--text-secondary)', 
               padding: '8px 16px', 
-              borderRadius: '12px', 
+              borderRadius: '0', 
               cursor: 'pointer', 
               fontSize: '13px', 
               fontWeight: '600' 
@@ -381,14 +381,14 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
               {activeTab === 'profile' && (
                 <>
                   {/* Player Card (Ficha Cromo) */}
-                  <div className="glass-panel" style={{ padding: '24px', borderRadius: '24px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'linear-gradient(135deg, rgba(13,240,163,0.02) 0%, rgba(13,202,240,0.02) 100%)', position: 'relative', overflow: 'hidden' }}>
+                  <div className="glass-panel" style={{ padding: '24px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'linear-gradient(135deg, rgba(13,240,163,0.02) 0%, rgba(13,202,240,0.02) 100%)', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '80px', height: '80px', background: 'var(--accent-cyan)', filter: 'blur(40px)', opacity: 0.1, pointerEvents: 'none' }} />
                     
                     {/* Player Photo Avatar */}
                     <div style={{
                       width: '80px',
                       height: '80px',
-                      borderRadius: '50%',
+                      borderRadius: '0',
                       background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)',
                       display: 'flex',
                       alignItems: 'center',
@@ -409,7 +409,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                         <span>{player.position?.name}</span>
                         {player.formationPosition?.name && player.formationPosition.name !== player.position.name && (
                           <>
-                            <span style={{ width: '3px', height: '3px', borderRadius: '50%', backgroundColor: 'var(--accent-cyan)' }} />
+                            <span style={{ width: '3px', height: '3px', borderRadius: '0', backgroundColor: 'var(--accent-cyan)' }} />
                             <span>{player.formationPosition.name}</span>
                           </>
                         )}
@@ -424,7 +424,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       gap: '12px',
                       background: 'rgba(255,255,255,0.01)',
                       border: '1px solid var(--border-color)',
-                      borderRadius: '16px',
+                      borderRadius: '0',
                       padding: '16px',
                       boxSizing: 'border-box'
                     }}>
@@ -448,7 +448,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   </div>
 
                   {/* Summary Statistics Card */}
-                  <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                  <div className="glass-panel" style={{ padding: '20px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
                     <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <Activity size={12} color="var(--accent-emerald)" /> Resumen de Rendimiento
                     </h3>
@@ -456,19 +456,19 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       <div className="skeleton" style={{ height: '40px', width: '100%' }} />
                     ) : (
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', textAlign: 'center' }}>
-                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '0' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>PARTIDOS</span>
                           <strong style={{ fontSize: '16px', color: 'var(--text-primary)' }}>{totalGames}</strong>
                         </div>
-                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '0' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>GOLES</span>
                           <strong style={{ fontSize: '16px', color: 'var(--accent-emerald)' }}>{totalGoals}</strong>
                         </div>
-                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '0' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>ASIST.</span>
                           <strong style={{ fontSize: '16px', color: 'var(--accent-cyan)' }}>{totalAssists}</strong>
                         </div>
-                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '10px' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.01)', padding: '10px', borderRadius: '0' }}>
                           <span style={{ display: 'block', fontSize: '9px', color: 'var(--text-muted)', fontWeight: '700' }}>VAL. MEDIA</span>
                           <strong style={{ fontSize: '16px', color: getRatingColor(avgRating) }}>{avgRating}</strong>
                         </div>
@@ -478,7 +478,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
 
                   {/* Dynamically Fetched Next Game */}
                   {nextMatch && (
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', margin: 0, borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Clock size={12} color="var(--accent-cyan)" /> Próximo Partido
                       </h3>
@@ -506,7 +506,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       {club && (
                         <div 
                           className="glass-panel" 
-                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                          style={{ padding: '12px 16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                           onClick={() => onOpenModal('team', club.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -523,7 +523,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                       {nationalTeam && (
                         <div 
                           className="glass-panel" 
-                          style={{ padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
+                          style={{ padding: '12px 16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                           onClick={() => onOpenModal('team', nationalTeam.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -541,7 +541,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
 
                   {/* Transfer History (Fichajes) */}
                   {transfers.length > 0 && (
-                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                    <div className="glass-panel" style={{ padding: '20px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
                       <h3 style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '1px solid var(--border-color)', paddingBottom: '6px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <Award size={12} color="var(--accent-emerald)" /> Historial de Fichajes
                       </h3>
@@ -570,7 +570,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   {loadingExtra ? (
                     <div className="skeleton" style={{ height: '80px', width: '100%' }} />
                   ) : athleteGames.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay historial de partidos reciente cargado para este jugador.</p>
                     </div>
                   ) : (
@@ -593,7 +593,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                           className="glass-panel"
                           style={{
                             padding: '14px 20px',
-                            borderRadius: '16px',
+                            borderRadius: '0',
                             border: '1px solid var(--border-color)',
                             display: 'flex',
                             flexDirection: 'column',
@@ -644,10 +644,10 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                                     </span>
                                   )}
                                   {yellowCardVal && Number(yellowCardVal) > 0 && (
-                                    <span style={{ width: '8px', height: '11px', backgroundColor: 'var(--warning)', borderRadius: '2px', display: 'inline-block', title: 'Tarjeta Amarilla' }} />
+                                    <span style={{ width: '8px', height: '11px', backgroundColor: 'var(--warning)', borderRadius: '0', display: 'inline-block', title: 'Tarjeta Amarilla' }} />
                                   )}
                                   {redCardVal && Number(redCardVal) > 0 && (
-                                    <span style={{ width: '8px', height: '11px', backgroundColor: 'var(--danger)', borderRadius: '2px', display: 'inline-block', title: 'Tarjeta Roja' }} />
+                                    <span style={{ width: '8px', height: '11px', backgroundColor: 'var(--danger)', borderRadius: '0', display: 'inline-block', title: 'Tarjeta Roja' }} />
                                   )}
                                 </>
                               )}
@@ -657,7 +657,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                               <div style={{
                                 width: '28px',
                                 height: '28px',
-                                borderRadius: '50%',
+                                borderRadius: '0',
                                 border: `2px solid ${getRatingColor(ratingVal)}`,
                                 background: `${getRatingColor(ratingVal)}20`,
                                 color: getRatingColor(ratingVal),
@@ -685,14 +685,14 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                   {loadingExtra ? (
                     <div className="skeleton" style={{ height: '150px', width: '100%' }} />
                   ) : Object.keys(statsByComp).length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay estadísticas disponibles para este jugador.</p>
                     </div>
                   ) : (
                     Object.values(statsByComp).map((comp, idx) => {
                       const cAvgRating = comp.ratingCount > 0 ? (comp.ratingSum / comp.ratingCount).toFixed(2) : 'N/A';
                       return (
-                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div key={idx} className="glass-panel" style={{ padding: '16px', borderRadius: '0', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                           <h4 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--accent-cyan)', margin: 0, textTransform: 'uppercase', borderBottom: '1px solid var(--border-color)', paddingBottom: '8px' }}>
                             {comp.name}
                           </h4>

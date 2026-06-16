@@ -49,15 +49,15 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
 
   if (!isUnlocked) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '0', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, var(--aura-emerald) 0%, transparent 50%)', opacity: 0.5, pointerEvents: 'none' }} />
         <Lock size={48} color="var(--accent-emerald)" style={{ marginBottom: '16px' }} />
         <h2 style={{ fontSize: '24px', fontWeight: '900', color: 'var(--text-primary)', marginBottom: '8px', letterSpacing: '0.5px' }}>ZENTRA Premium</h2>
         <p style={{ fontSize: '15px', color: 'var(--text-muted)', marginBottom: '24px' }}>Mejora tu rentabilidad con herramientas profesionales.</p>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '380px', width: '100%', textAlign: 'left', marginBottom: '32px', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '380px', width: '100%', textAlign: 'left', marginBottom: '32px', background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: '0', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ padding: '6px', background: 'rgba(13,240,163,0.1)', borderRadius: '8px', color: 'var(--accent-emerald)' }}>
+            <div style={{ padding: '6px', background: 'rgba(13,240,163,0.1)', borderRadius: '0', color: 'var(--accent-emerald)' }}>
               <Target size={18} />
             </div>
             <div>
@@ -67,7 +67,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
           </div>
 
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ padding: '6px', background: 'rgba(14,165,233,0.1)', borderRadius: '8px', color: 'var(--accent-cyan)' }}>
+            <div style={{ padding: '6px', background: 'rgba(14,165,233,0.1)', borderRadius: '0', color: 'var(--accent-cyan)' }}>
               <Mail size={18} />
             </div>
             <div>
@@ -77,7 +77,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
           </div>
 
           <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-            <div style={{ padding: '6px', background: 'rgba(245,158,11,0.1)', borderRadius: '8px', color: '#f59e0b' }}>
+            <div style={{ padding: '6px', background: 'rgba(245,158,11,0.1)', borderRadius: '0', color: '#f59e0b' }}>
               <ShieldCheck size={18} />
             </div>
             <div>
@@ -89,7 +89,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
         <button 
           onClick={handlePayment}
           disabled={loadingPayment}
-          style={{ padding: '12px 32px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', color: '#000', border: 'none', fontWeight: '800', fontSize: '14px', cursor: loadingPayment ? 'not-allowed' : 'pointer', boxShadow: '0 0 20px rgba(13,240,163,0.3)', transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '8px' }}
+          style={{ padding: '12px 32px', borderRadius: '0', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', color: '#000', border: 'none', fontWeight: '800', fontSize: '14px', cursor: loadingPayment ? 'not-allowed' : 'pointer', boxShadow: '0 0 20px rgba(13,240,163,0.3)', transition: 'all 0.2s ease', display: 'flex', alignItems: 'center', gap: '8px' }}
           onMouseEnter={(e) => !loadingPayment && (e.currentTarget.style.transform = 'translateY(-2px)')}
           onMouseLeave={(e) => !loadingPayment && (e.currentTarget.style.transform = 'translateY(0)')}
         >
@@ -162,7 +162,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
           <div style={{ 
             width: '46px', 
             height: '46px', 
-            borderRadius: '50%', 
+            borderRadius: '0', 
             background: t.percentage >= 0.85 ? 'rgba(13,240,163,0.08)' : 'rgba(59,130,246,0.08)',
             border: t.percentage >= 0.85 ? '2px solid var(--accent-emerald)' : '2px solid var(--accent-blue)',
             display: 'flex', 
@@ -203,7 +203,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
               alignItems: 'center',
               gap: '12px',
               padding: '10px 16px',
-              borderRadius: '12px',
+              borderRadius: '0',
               background: 'var(--border-color)',
               border: '1px solid var(--border-color)',
               textDecoration: 'none',
@@ -229,7 +229,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
                 {renderTrendIcon(t.odds?.trend)}
               </span>
             </div>
-            <div style={{ padding: '6px', background: 'var(--border-color)', borderRadius: '8px', color: 'var(--text-secondary)' }}>
+            <div style={{ padding: '6px', background: 'var(--border-color)', borderRadius: '0', color: 'var(--text-secondary)' }}>
               <ExternalLink size={12} />
             </div>
           </a>
@@ -244,10 +244,10 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
   const pickStatus = evaluatePickStatus(bestPick, game);
 
   const renderPickStatus = () => {
-    if (pickStatus === 'WON') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><CheckCircle2 size={12}/> GANADO</div>;
-    if (pickStatus === 'LOST') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><XCircle size={12}/> PERDIDO</div>;
-    if (game?.statusGroup === 4) return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> FINALIZADO</div>;
-    return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> EN JUEGO</div>;
+    if (pickStatus === 'WON') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '4px 8px', borderRadius: '0', fontSize: '11px', fontWeight: '800' }}><CheckCircle2 size={12}/> GANADO</div>;
+    if (pickStatus === 'LOST') return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(239,68,68,0.1)', color: 'var(--danger)', padding: '4px 8px', borderRadius: '0', fontSize: '11px', fontWeight: '800' }}><XCircle size={12}/> PERDIDO</div>;
+    if (game?.statusGroup === 4) return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '0', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> FINALIZADO</div>;
+    return <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', padding: '4px 8px', borderRadius: '0', fontSize: '11px', fontWeight: '800' }}><Clock size={12}/> EN JUEGO</div>;
   };
 
   return (
@@ -255,7 +255,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
       
       {/* ZENTRA Predictor Card */}
       {bestPick && (
-        <div style={{ background: 'linear-gradient(135deg, rgba(13,240,163,0.1) 0%, rgba(14,165,233,0.1) 100%)', borderRadius: '16px', padding: '24px', border: '1px solid rgba(13,240,163,0.3)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ background: 'linear-gradient(135deg, rgba(13,240,163,0.1) 0%, rgba(14,165,233,0.1) 100%)', borderRadius: '0', padding: '24px', border: '1px solid rgba(13,240,163,0.3)', position: 'relative', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
@@ -267,11 +267,11 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
             {renderPickStatus()}
           </div>
 
-          <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '12px', padding: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '0', padding: '16px', border: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ fontSize: '18px', fontWeight: '800', color: '#fff' }}>{bestPick.text}</span>
               {bestPick.odds && (
-                <div style={{ background: 'var(--accent-emerald)', color: '#000', padding: '4px 10px', borderRadius: '6px', fontWeight: '900', fontSize: '14px' }}>
+                <div style={{ background: 'var(--accent-emerald)', color: '#000', padding: '4px 10px', borderRadius: '0', fontWeight: '900', fontSize: '14px' }}>
                   {bestPick.odds}
                 </div>
               )}
@@ -282,8 +282,8 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
                 <span style={{ color: 'var(--text-secondary)' }}>Nivel de Confianza Algorítmica</span>
                 <span style={{ color: bestPick.confidence > 80 ? 'var(--warning)' : 'var(--accent-emerald)' }}>{bestPick.confidence}%</span>
               </div>
-              <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: `${bestPick.confidence}%`, height: '100%', background: bestPick.confidence > 80 ? 'var(--warning)' : 'var(--accent-emerald)', borderRadius: '4px' }} />
+              <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '0', overflow: 'hidden' }}>
+                <div style={{ width: `${bestPick.confidence}%`, height: '100%', background: bestPick.confidence > 80 ? 'var(--warning)' : 'var(--accent-emerald)', borderRadius: '0' }} />
               </div>
             </div>
           </div>
@@ -297,7 +297,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
           <h3 style={{ fontSize: '13px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
             Oportunidades de Valor
           </h3>
-          <span style={{ fontSize: '9px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '2px 6px', borderRadius: '8px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <span style={{ fontSize: '9px', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', padding: '2px 6px', borderRadius: '0', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Cuota {'>='} 1.40
           </span>
         </div>

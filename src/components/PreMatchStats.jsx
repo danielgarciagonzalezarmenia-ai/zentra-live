@@ -27,15 +27,15 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
-        <div className="spinner" style={{ border: '3px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--accent-emerald)', borderRadius: '50%', width: '32px', height: '32px', animation: 'spin 1s linear infinite' }}></div>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '0', border: '1px solid var(--border-color)' }}>
+        <div className="spinner" style={{ border: '3px solid rgba(255,255,255,0.1)', borderTopColor: 'var(--accent-emerald)', borderRadius: '0', width: '32px', height: '32px', animation: 'spin 1s linear infinite' }}></div>
       </div>
     );
   }
 
   if (!data || !data.statistics || data.statistics.length === 0) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '0', border: '1px solid var(--border-color)' }}>
         <Activity size={48} color="var(--border-color)" style={{ marginBottom: '16px' }} />
         <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', marginBottom: '8px' }}>Estadísticas no disponibles</h3>
         <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Aún no hay datos pre-partido suficientes para este encuentro.</p>
@@ -94,7 +94,7 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
         
         <div style={{ display: 'flex', gap: '4px' }}>
           {/* Home Bar */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', height: '8px', borderRadius: '0', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
             <div style={{ 
               width: `${homePct}%`, 
               background: isHomeGreater ? 'var(--accent-emerald)' : 'var(--border-color)',
@@ -102,7 +102,7 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
             }} />
           </div>
           {/* Away Bar */}
-          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', height: '8px', borderRadius: '0', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
             <div style={{ 
               width: `${awayPct}%`, 
               background: isAwayGreater ? 'var(--accent-emerald)' : 'var(--border-color)',
@@ -147,7 +147,7 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
       
       {/* Grupo 1: Todas las competiciones (Porcentajes) */}
       {group1Stats.length > 0 && (
-        <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '24px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
             <span style={{ fontSize: '13px', color: 'var(--text-muted)', fontWeight: '600' }}>{homeText}</span>
             <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: '700' }}>Todas las competiciones</span>
@@ -167,7 +167,7 @@ export default function PreMatchStats({ gameId, homeCompetitor, awayCompetitor }
 
       {/* Grupo 2: Estadísticas promedio (Números crudos) */}
       {group2Stats.length > 0 && (
-        <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+        <div style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
           <div style={{ textAlign: 'center', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
             <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: '700' }}>Estadísticas promedio</span>
           </div>

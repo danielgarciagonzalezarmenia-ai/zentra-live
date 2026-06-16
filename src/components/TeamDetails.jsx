@@ -168,7 +168,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
                 padding: '8px 16px', 
-                borderRadius: '12px', 
+                borderRadius: '0', 
                 cursor: 'pointer', 
                 fontSize: '13px', 
                 fontWeight: '600' 
@@ -197,7 +197,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
               <div style={{
                 width: '70px',
                 height: '70px',
-                borderRadius: '16px',
+                borderRadius: '0',
                 background: 'var(--border-color)',
                 border: '1px solid var(--border-color)',
                 display: 'flex',
@@ -221,7 +221,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
                   <span>{country?.name || 'Internacional'}</span>
                   {competitor.symbolicName && (
                     <>
-                      <span style={{ width: '3px', height: '3px', borderRadius: '50%', backgroundColor: 'var(--text-muted)' }} />
+                      <span style={{ width: '3px', height: '3px', borderRadius: '0', backgroundColor: 'var(--text-muted)' }} />
                       <span>{competitor.symbolicName}</span>
                     </>
                   )}
@@ -295,7 +295,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
               {activeTab === 'games' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {sortedGames.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>No hay partidos programados o recientes para este equipo.</p>
                     </div>
                   ) : (
@@ -326,7 +326,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
                           className="glass-panel"
                           style={{
                             padding: '14px 20px',
-                            borderRadius: '14px',
+                            borderRadius: '0',
                             border: '1px solid var(--border-color)',
                             display: 'flex',
                             alignItems: 'center',
@@ -365,7 +365,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
                               <div style={{
                                 width: '22px',
                                 height: '22px',
-                                borderRadius: '6px',
+                                borderRadius: '0',
                                 background: 'var(--border-color)',
                                 border: `1px solid ${resultColor}`,
                                 color: resultColor,
@@ -390,7 +390,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
               {activeTab === 'squad' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                   {positions.length === 0 || players.length === 0 ? (
-                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '16px' }}>
+                    <div className="glass-panel" style={{ textAlign: 'center', padding: '32px 20px', color: 'var(--text-muted)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                       <p style={{ margin: 0, fontSize: '13px' }}>Plantilla no disponible para este equipo.</p>
                     </div>
                   ) : (
@@ -408,7 +408,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isI
                                 className="glass-panel"
                                 style={{
                                   padding: '12px 16px',
-                                  borderRadius: '12px',
+                                  borderRadius: '0',
                                   border: '1px solid var(--border-color)',
                                   display: 'flex',
                                   alignItems: 'center',

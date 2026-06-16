@@ -338,7 +338,7 @@ export default function App() {
   const renderSkeletons = () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '16px' }}>
       {[1, 2, 3].map(i => (
-        <div key={i} className="skeleton" style={{ height: '90px', width: '100%', borderRadius: '16px' }} />
+        <div key={i} className="skeleton" style={{ height: '90px', width: '100%', borderRadius: '0' }} />
       ))}
     </div>
   );
@@ -392,7 +392,7 @@ export default function App() {
                   onClick={() => setSelectedLeagueId(null)}
                   style={{
                     padding: '6px 12px',
-                    borderRadius: '20px',
+                    borderRadius: '0',
                     border: selectedLeagueId === null ? '1px solid var(--accent-emerald)' : '1px solid transparent',
                     background: selectedLeagueId === null ? 'rgba(13, 240, 163, 0.1)' : 'var(--bg-secondary)',
                     color: selectedLeagueId === null ? 'var(--accent-emerald)' : 'var(--text-secondary)',
@@ -411,7 +411,7 @@ export default function App() {
                     onClick={() => setSelectedLeagueId(comp.id)}
                     style={{
                       padding: '6px 12px',
-                      borderRadius: '20px',
+                      borderRadius: '0',
                       border: selectedLeagueId === comp.id ? '1px solid var(--accent-emerald)' : '1px solid transparent',
                       background: selectedLeagueId === comp.id ? 'rgba(13, 240, 163, 0.1)' : 'var(--bg-secondary)',
                       color: selectedLeagueId === comp.id ? 'var(--accent-emerald)' : 'var(--text-secondary)',
@@ -446,7 +446,7 @@ export default function App() {
                 <span style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>{error}</span>
                 <button 
                   onClick={() => fetchData(true)}
-                  style={{ padding: '8px 16px', border: '1px solid var(--accent-emerald)', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
+                  style={{ padding: '8px 16px', border: '1px solid var(--accent-emerald)', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', borderRadius: '0', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
                 >
                   Reintentar
                 </button>
@@ -511,7 +511,7 @@ export default function App() {
               top: '24px', 
               height: 'calc(100vh - 48px)', 
               overflowY: 'auto',
-              borderRadius: '24px',
+              borderRadius: '0',
               border: '1px solid var(--border-color)',
               background: 'var(--bg-primary)',
               scrollbarWidth: 'none'

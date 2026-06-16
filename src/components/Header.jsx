@@ -171,7 +171,7 @@ export default function Header({
                 width: '100%',
                 background: 'var(--border-color)',
                 border: '1px solid var(--border-color)',
-                borderRadius: '12px',
+                borderRadius: '0',
                 padding: '8px 12px 8px 32px',
                 color: 'var(--text-primary)',
                 fontSize: '12px',
@@ -201,7 +201,7 @@ export default function Header({
               right: 0,
               maxHeight: '300px',
               overflowY: 'auto',
-              borderRadius: '14px',
+              borderRadius: '0',
               border: '1px solid var(--border-color)',
               background: 'var(--bg-card)',
               backdropFilter: 'blur(20px)',
@@ -231,7 +231,7 @@ export default function Header({
                         <div 
                           key={comp.id}
                           onClick={() => { onOpenModal('league', comp.id); setShowDropdown(false); setSearchQuery(''); }}
-                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          style={{ padding: '5px 8px', borderRadius: '0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
                           className="search-item"
                         >
                           <img 
@@ -254,7 +254,7 @@ export default function Header({
                         <div 
                           key={team.id}
                           onClick={() => { onOpenModal('team', team.id); setShowDropdown(false); setSearchQuery(''); }}
-                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          style={{ padding: '5px 8px', borderRadius: '0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
                           className="search-item"
                         >
                           <img 
@@ -277,10 +277,10 @@ export default function Header({
                         <div 
                           key={player.id}
                           onClick={() => { onOpenModal('player', player.id); setShowDropdown(false); setSearchQuery(''); }}
-                          style={{ padding: '5px 8px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
+                          style={{ padding: '5px 8px', borderRadius: '0', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-primary)', transition: 'background 0.2s ease' }}
                           className="search-item"
                         >
-                          <div style={{ width: '14px', height: '14px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', display: 'flex', alignItems: 'center', justify: 'center', fontSize: '8px', fontWeight: '900', color: 'var(--bg-primary)' }}>
+                          <div style={{ width: '14px', height: '14px', borderRadius: '0', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', display: 'flex', alignItems: 'center', justify: 'center', fontSize: '8px', fontWeight: '900', color: 'var(--bg-primary)' }}>
                             {player.name ? player.name[0].toUpperCase() : '?'}
                           </div>
                           <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -307,7 +307,7 @@ export default function Header({
               onClick={handleInstallClick}
               style={{
                 padding: '8px 16px',
-                borderRadius: '20px',
+                borderRadius: '0',
                 border: 'none',
                 background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)',
                 color: '#000',
@@ -329,7 +329,7 @@ export default function Header({
             onClick={() => setFilterLive(!filterLive)}
             style={{
               padding: '8px 16px',
-              borderRadius: '20px',
+              borderRadius: '0',
               border: filterLive ? '1px solid var(--accent-emerald)' : '1px solid var(--border-color)',
               background: filterLive ? 'rgba(13, 240, 163, 0.1)' : 'transparent',
               color: filterLive ? 'var(--accent-emerald)' : 'var(--text-secondary)',
@@ -352,7 +352,7 @@ export default function Header({
 
           {/* Firebase Authentication Area */}
           {authLoading ? (
-            <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
+            <div className="skeleton" style={{ width: '36px', height: '36px', borderRadius: '0' }} />
           ) : user ? (
             <div 
               style={{ position: 'relative' }} 
@@ -364,7 +364,7 @@ export default function Header({
                 style={{
                   width: '36px',
                   height: '36px',
-                  borderRadius: '50%',
+                  borderRadius: '0',
                   border: user.isPremium ? '2px solid var(--warning)' : '1px solid var(--border-color)',
                   background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--border-color) 100%)',
                   padding: 0,
@@ -397,7 +397,7 @@ export default function Header({
                     bottom: -2,
                     right: -2,
                     background: 'var(--warning)',
-                    borderRadius: '50%',
+                    borderRadius: '0',
                     width: '12px',
                     height: '12px',
                     display: 'flex',
@@ -417,7 +417,7 @@ export default function Header({
                   top: '44px',
                   right: 0,
                   width: '260px',
-                  borderRadius: '16px',
+                  borderRadius: '0',
                   border: '1px solid var(--border-color)',
                   background: 'var(--bg-card)',
                   backdropFilter: 'blur(20px)',
@@ -433,7 +433,7 @@ export default function Header({
                     <div style={{
                       width: '44px',
                       height: '44px',
-                      borderRadius: '50%',
+                      borderRadius: '0',
                       overflow: 'hidden',
                       border: user.isPremium ? '2px solid var(--warning)' : '1px solid var(--border-color)',
                       flexShrink: 0
@@ -465,7 +465,7 @@ export default function Header({
                   {/* Membership Card */}
                   <div style={{
                     padding: '12px',
-                    borderRadius: '12px',
+                    borderRadius: '0',
                     background: user.isPremium 
                       ? 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%)' 
                       : 'var(--border-color)',
@@ -502,7 +502,7 @@ export default function Header({
                     style={{
                       width: '100%',
                       padding: '8px 12px',
-                      borderRadius: '10px',
+                      borderRadius: '0',
                       border: '1px solid rgba(239, 68, 68, 0.2)',
                       background: 'rgba(239, 68, 68, 0.05)',
                       color: 'var(--danger)',
@@ -529,7 +529,7 @@ export default function Header({
               onClick={onLogin}
               style={{
                 padding: '8px 14px',
-                borderRadius: '20px',
+                borderRadius: '0',
                 border: '1px solid var(--accent-emerald)',
                 background: 'rgba(13, 240, 163, 0.05)',
                 color: 'var(--accent-emerald)',
@@ -572,7 +572,7 @@ export default function Header({
                 style={{
                   minWidth: '46px',
                   padding: '6px 8px',
-                  borderRadius: '12px',
+                  borderRadius: '0',
                   border: isSelected ? '1px solid var(--accent-emerald)' : '1px solid transparent',
                   background: isSelected ? 'rgba(13, 240, 163, 0.08)' : 'var(--border-color)',
                   color: isSelected ? 'var(--accent-emerald)' : 'var(--text-secondary)',
@@ -602,7 +602,7 @@ export default function Header({
             style={{
               width: '45px',
               height: '45px',
-              borderRadius: '12px',
+              borderRadius: '0',
               border: '1px solid var(--border-color)',
               background: 'var(--border-color)',
               color: 'var(--text-secondary)',
@@ -643,7 +643,7 @@ export default function Header({
             style={{
               background: 'var(--bg-secondary)',
               padding: '24px 24px calc(24px + env(safe-area-inset-bottom)) 24px',
-              borderRadius: '24px 24px 0 0',
+              borderRadius: '0',
               borderTop: '1px solid var(--border-color)',
               maxWidth: '500px',
               width: '100%',
@@ -660,7 +660,7 @@ export default function Header({
             <p style={{ margin: '0 0 20px 0', fontSize: '14px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>
               Para instalar la aplicación en tu pantalla de inicio, sigue estos dos sencillos pasos:
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '0' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Share size={20} color="var(--accent-cyan)" />
                 <span style={{ fontSize: '14px', color: 'var(--text-primary)' }}>1. Toca el botón <b>Compartir</b> en el menú de navegación abajo.</span>
@@ -672,7 +672,7 @@ export default function Header({
             </div>
             <button 
               onClick={() => setShowIOSPrompt(false)}
-              style={{ width: '100%', marginTop: '20px', padding: '12px', borderRadius: '12px', background: 'var(--border-color)', color: 'var(--text-primary)', border: 'none', fontWeight: '700', cursor: 'pointer' }}
+              style={{ width: '100%', marginTop: '20px', padding: '12px', borderRadius: '0', background: 'var(--border-color)', color: 'var(--text-primary)', border: 'none', fontWeight: '700', cursor: 'pointer' }}
             >
               Entendido
             </button>

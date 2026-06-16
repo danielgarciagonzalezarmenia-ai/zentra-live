@@ -6,7 +6,7 @@ export default function StatsTab({ statsList, homeId, awayId }) {
   // statsList is the flat array of stats from 365scores
   if (!statsList || !Array.isArray(statsList) || statsList.length === 0) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '0', border: '1px solid var(--border-color)' }}>
         <Target size={48} color="var(--border-color)" style={{ marginBottom: '16px' }} />
         <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', marginBottom: '8px' }}>Sin estadísticas</h3>
         <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Las estadísticas de este partido aún no están disponibles.</p>
@@ -49,7 +49,7 @@ export default function StatsTab({ statsList, homeId, awayId }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {Object.entries(statsByCategory).map(([category, stats]) => (
-        <div key={category} style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+        <div key={category} style={{ background: 'var(--bg-card)', padding: '24px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
           <div style={{ textAlign: 'center', marginBottom: '16px', paddingBottom: '16px', borderBottom: '1px solid var(--border-color)' }}>
             <span style={{ fontSize: '14px', color: 'var(--text-primary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px' }}>
               {category}
@@ -113,7 +113,7 @@ export default function StatsTab({ statsList, homeId, awayId }) {
                   {/* Progress Bar Container */}
                   <div style={{ display: 'flex', gap: '4px' }}>
                     {/* Home Bar */}
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', height: '8px', borderRadius: '0', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
                       <div style={{ 
                         width: `${homePercentage}%`, 
                         background: isHomeGreater ? 'var(--accent-emerald)' : 'var(--border-color)',
@@ -121,7 +121,7 @@ export default function StatsTab({ statsList, homeId, awayId }) {
                       }} />
                     </div>
                     {/* Away Bar */}
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start', height: '8px', borderRadius: '0', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
                       <div style={{ 
                         width: `${awayPercentage}%`, 
                         background: isAwayGreater ? 'var(--accent-emerald)' : 'var(--border-color)',

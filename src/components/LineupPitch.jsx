@@ -89,7 +89,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               </div>
               <span className="player-name hover-underline">{details.shortName || details.name || 'Player'}</span>
               {player.ranking && (
-                <span style={{ fontSize: '7px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '0 2px', borderRadius: '2px', color: 'var(--accent-emerald)', marginTop: '1px' }}>
+                <span style={{ fontSize: '7px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '0 2px', borderRadius: '0', color: 'var(--accent-emerald)', marginTop: '1px' }}>
                   {player.ranking}
                 </span>
               )}
@@ -116,7 +116,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               </div>
               <span className="player-name hover-underline">{details.shortName || details.name || 'Player'}</span>
               {player.ranking && (
-                <span style={{ fontSize: '7px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '0 2px', borderRadius: '2px', color: 'var(--accent-emerald)', marginTop: '1px' }}>
+                <span style={{ fontSize: '7px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '0 2px', borderRadius: '0', color: 'var(--accent-emerald)', marginTop: '1px' }}>
                   {player.ranking}
                 </span>
               )}
@@ -134,13 +134,13 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
       <div style={{ flex: '1.2', minWidth: '320px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         
         {/* Selector de Equipo */}
-        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: '4px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.2)', padding: '4px', borderRadius: '0', border: '1px solid var(--border-color)' }}>
           <button
             onClick={() => setSelectedTeamId(homeId)}
             style={{
               flex: 1,
               padding: '10px 12px',
-              borderRadius: '8px',
+              borderRadius: '0',
               border: 'none',
               background: selectedTeamId === homeId ? 'rgba(13,240,163,0.1)' : 'transparent',
               color: selectedTeamId === homeId ? 'var(--accent-emerald)' : 'var(--text-secondary)',
@@ -154,7 +154,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               fontSize: '13px'
             }}
           >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-emerald)' }} />
+            <span style={{ width: '6px', height: '6px', borderRadius: '0', background: 'var(--accent-emerald)' }} />
             {gameDetails.game?.homeCompetitor?.name}
           </button>
           <button
@@ -162,7 +162,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
             style={{
               flex: 1,
               padding: '10px 12px',
-              borderRadius: '8px',
+              borderRadius: '0',
               border: 'none',
               background: selectedTeamId === awayId ? 'rgba(13,202,240,0.1)' : 'transparent',
               color: selectedTeamId === awayId ? 'var(--accent-cyan)' : 'var(--text-secondary)',
@@ -176,7 +176,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
               fontSize: '13px'
             }}
           >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-cyan)' }} />
+            <span style={{ width: '6px', height: '6px', borderRadius: '0', background: 'var(--accent-cyan)' }} />
             {gameDetails.game?.awayCompetitor?.name}
           </button>
         </div>
@@ -214,7 +214,7 @@ export default function LineupPitch({ gameDetails, onOpenModal }) {
         minWidth: '300px', 
         background: 'rgba(255,255,255,0.01)', 
         border: '1px solid var(--border-color)', 
-        borderRadius: '16px', 
+        borderRadius: '0', 
         padding: '20px', 
         display: 'flex', 
         flexDirection: 'column', 
