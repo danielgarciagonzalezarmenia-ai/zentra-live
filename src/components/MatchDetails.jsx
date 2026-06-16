@@ -282,10 +282,11 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
             <div className="hide-scrollbar" style={{ display: 'flex', width: '100%', maxWidth: '800px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               {[
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },
+                (game.statusGroup === 3 || game.statusGroup === 4) ? { id: 'game-stats', name: 'Est. del Partido', icon: <Target size={14} /> } : null,
                 { id: 'lineup', name: 'Alineación Táctica', icon: <Users size={14} /> },
                 { id: 'stats', name: 'Estadísticas', icon: <Activity size={14} /> },
                 { id: 'trends', name: 'Radar de Valor', icon: <BarChart3 size={14} /> }
-              ].map(tab => {
+              ].filter(Boolean).map(tab => {
                 const isSelected = activeTab === tab.id;
                 return (
                   <button
@@ -298,15 +299,17 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                       padding: '16px 6px',
                       background: 'transparent',
                       border: 'none',
-                      borderBottom: isSelected ? '2px solid var(--accent-emerald)' : '2px solid transparent',
                       color: isSelected ? 'var(--accent-emerald)' : 'var(--text-secondary)',
-                      fontWeight: '700',
-                      fontSize: '13px',
+                      fontWeight: isSelected ? '800' : '600',
+                      fontSize: '12px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
+                      position: 'relative',
                       whiteSpace: 'nowrap',
                       transition: 'all 0.2s ease',
                       boxShadow: isSelected ? 'inset 0 -10px 10px -10px rgba(13,240,163,0.1)' : 'none'
@@ -347,22 +350,20 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                 <LineupPitch gameDetails={gameDetails} onOpenModal={onOpenModal} />
               )}
 
+              {activeTab === 'game-stats' && (
+                <StatsTab 
+                  statsList={statsData?.statistics} 
+                  homeId={home.id} 
+                  awayId={away.id} 
+                />
+              )}
+
               {activeTab === 'stats' && (
-                <>
-                  {(game.statusGroup === 1 || game.statusGroup === 2) ? (
-                    <PreMatchStats 
-                      gameId={game.id}
-                      homeCompetitor={gameDetails?.game?.homeCompetitor} 
-                      awayCompetitor={gameDetails?.game?.awayCompetitor} 
-                    />
-                  ) : (
-                    <StatsTab 
-                      statsList={statsData?.statistics} 
-                      homeId={home.id} 
-                      awayId={away.id} 
-                    />
-                  )}
-                </>
+                <PreMatchStats 
+                  gameId={game.id}
+                  homeCompetitor={gameDetails?.game?.homeCompetitor} 
+                  awayCompetitor={gameDetails?.game?.awayCompetitor} 
+                />
               )}
               
               {activeTab === 'trends' && (
