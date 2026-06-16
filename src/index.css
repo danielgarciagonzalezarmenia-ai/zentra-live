@@ -35,6 +35,10 @@
   color: var(--text-primary);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 :root[data-theme='dark'] {
   /* No changes needed, default is already dark */
 }
