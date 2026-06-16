@@ -156,11 +156,11 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
         
         {/* Widescreen Header */}
         <div style={{ 
-          padding: '24px 32px', 
+          padding: '16px 12px', 
           borderBottom: '1px solid var(--border-color)', 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: '20px', 
+          gap: '16px', 
           position: 'relative',
           background: 'linear-gradient(180deg, var(--bg-card) 0%, transparent 100%)'
         }}>
@@ -175,10 +175,10 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                 background: 'var(--border-color)', 
                 border: '1px solid var(--border-color)', 
                 color: 'var(--text-secondary)', 
-                padding: '8px 16px', 
+                padding: '8px 12px', 
                 borderRadius: '0', 
                 cursor: 'pointer', 
-                fontSize: '13px', 
+                fontSize: '12px', 
                 fontWeight: '600', 
                 transition: 'all 0.2s ease' 
               }}
@@ -202,7 +202,8 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                 color: 'var(--text-muted)', 
                 cursor: 'pointer', 
                 fontSize: '20px',
-                fontWeight: '300'
+                fontWeight: '300',
+                padding: '0 8px'
               }}
             >
               ✕
@@ -213,27 +214,27 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
               <span 
                 onClick={() => onOpenModal('league', game.competitionId)}
-                style={{ fontSize: '11px', color: 'var(--accent-emerald)', fontWeight: '800', letterSpacing: '1.5px', textTransform: 'uppercase', cursor: 'pointer' }}
+                style={{ fontSize: '10px', color: 'var(--accent-emerald)', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', cursor: 'pointer', textAlign: 'center' }}
                 className="hover-underline"
               >
                 {game.competitionDisplayName}
               </span>
               
               {/* Scoreboard Block */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '32px', width: '100%' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', width: '100%' }}>
                 {/* Home */}
                 <div 
                   onClick={() => onOpenModal('team', home.id)}
-                  style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', textAlign: 'center', cursor: 'pointer' }}
+                  style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', textAlign: 'center', cursor: 'pointer' }}
                 >
-                  <img src={getTeamLogo(home.id)} alt={home.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
-                  <span style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }} className="hover-underline">{home.name}</span>
+                  <img src={getTeamLogo(home.id)} alt={home.name} style={{ width: '56px', height: '56px', objectFit: 'contain' }} />
+                  <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)' }} className="hover-underline">{home.name}</span>
                 </div>
 
                 {/* Score or Countdown */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '90px' }}>
                   <div style={{ 
-                    fontSize: (countdown && home.score === -1) ? '28px' : '40px', 
+                    fontSize: (countdown && home.score === -1) ? '22px' : '32px', 
                     fontWeight: '900', 
                     letterSpacing: (countdown && home.score === -1) ? '2px' : '6px', 
                     color: 'var(--text-primary)', 
@@ -266,10 +267,10 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                 {/* Away */}
                 <div 
                   onClick={() => onOpenModal('team', away.id)}
-                  style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', textAlign: 'center', cursor: 'pointer' }}
+                  style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', textAlign: 'center', cursor: 'pointer' }}
                 >
-                  <img src={getTeamLogo(away.id)} alt={away.name} style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
-                  <span style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }} className="hover-underline">{away.name}</span>
+                  <img src={getTeamLogo(away.id)} alt={away.name} style={{ width: '56px', height: '56px', objectFit: 'contain' }} />
+                  <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)' }} className="hover-underline">{away.name}</span>
                 </div>
               </div>
             </div>

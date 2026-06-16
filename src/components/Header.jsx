@@ -148,7 +148,7 @@ export default function Header({
   return (
     <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '1400px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box', borderRadius: '0' }}>
       {/* Brand & Search */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', gap: '12px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div className="header-brand" style={{ display: 'flex', alignItems: 'center' }}>
           <img src="/images/favicon.png" alt="ZENTRA Logo" className="brand-logo" />
         </div>
@@ -156,7 +156,7 @@ export default function Header({
         {/* Search Engine */}
         <div 
           className="header-search"
-          style={{ position: 'relative', minWidth: '220px', flex: 1, maxWidth: '280px' }}
+          style={{ position: 'relative', minWidth: '160px', flex: '1 1 200px', maxWidth: '400px' }}
           onClick={(e) => e.stopPropagation()}
         >
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
