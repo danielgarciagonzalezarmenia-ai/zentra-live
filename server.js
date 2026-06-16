@@ -404,6 +404,16 @@ app.listen(PORT, () => {
   console.log(`ZENTRA backend server running on port ${PORT}`);
 });
 
+// Auto-ping to prevent Render sleep
+setInterval(() => {
+  const https = require('https');
+  https.get('https://zentra-live-backend.onrender.com/ping', (res) => {
+    console.log(`[Keep-Alive] Auto-ping exitoso: ${res.statusCode}`);
+  }).on('error', (e) => {
+    console.error(`[Keep-Alive] Error: ${e.message}`);
+  });
+}, 14 * 60 * 1000); // 14 minutos
+
 // ----------------------------------------------------
 // ZENTRA VALUE RADAR - EMAIL NOTIFIER CRON JOB
 // ----------------------------------------------------
