@@ -16,7 +16,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
   const [gameDetails, setGameDetails] = useState(null);
   const [statsData, setStatsData] = useState(null);
   const [trendsData, setTrendsData] = useState(null);
-  const [activeTab, setActiveTab] = useState('timeline'); // 'timeline', 'lineup', 'stats', 'trends'
+  const [activeTab, setActiveTab] = useState('trends'); // 'trends', 'timeline', 'lineup', 'stats'
   const [countdown, setCountdown] = useState('');
 
   useEffect(() => {
@@ -282,11 +282,11 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
           <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)', backdropFilter: 'var(--glass-blur)' }}>
             <div className="hide-scrollbar" style={{ display: 'flex', width: '100%', maxWidth: '800px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               {[
+                { id: 'trends', name: 'Radar de Valor', icon: <BarChart3 size={14} /> },
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },
                 (game.statusGroup === 3 || game.statusGroup === 4) ? { id: 'game-stats', name: 'Est. del Partido', icon: <Target size={14} /> } : null,
                 { id: 'lineup', name: 'Alineación Táctica', icon: <Users size={14} /> },
-                { id: 'stats', name: 'Estadísticas', icon: <Activity size={14} /> },
-                { id: 'trends', name: 'Radar de Valor', icon: <BarChart3 size={14} /> }
+                { id: 'stats', name: 'Estadísticas', icon: <Activity size={14} /> }
               ].filter(Boolean).map(tab => {
                 const isSelected = activeTab === tab.id;
                 return (
