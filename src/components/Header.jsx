@@ -150,7 +150,7 @@ export default function Header({
       {/* Brand & Search */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div className="header-brand" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ height: '70px', width: 'auto', maxWidth: '240px', objectFit: 'contain' }} />
+          <img src="/images/favicon.png" alt="ZENTRA Logo" className="brand-logo" />
         </div>
 
         {/* Search Engine */}
