@@ -146,7 +146,7 @@ export default function Header({
   const days = getDaysArray();
 
   return (
-    <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '1200px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
+    <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '1400px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box', borderRadius: '0' }}>
       {/* Brand & Search */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', gap: '12px' }}>
         <div className="header-brand" style={{ display: 'flex', alignItems: 'center' }}>
