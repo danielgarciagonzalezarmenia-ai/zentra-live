@@ -3,7 +3,8 @@ import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap, M
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import { getBestPick, evaluatePickStatus } from '../utils/predict';
-import { signInWithGoogle } from '../firebase';
+import { auth, googleProvider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }) {
   const isPremium = user?.isPremium;
@@ -13,7 +14,7 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
     let currentUser = user;
     if (!currentUser) {
       try {
-        const result = await signInWithGoogle();
+        const result = await signInWithPopup(auth, googleProvider);
         currentUser = result.user;
         // La app principal detectará el cambio de auth y actualizará el estado
         return; 
