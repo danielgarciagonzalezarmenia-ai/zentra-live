@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown, Sun, Moon, Download, Share, PlusSquare } from 'lucide-react';
+import { Calendar, RefreshCw, Trophy, Zap, Search, LogIn, LogOut, User, Crown, Sun, Moon, Download, Share, PlusSquare, TrendingUp } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
@@ -594,6 +594,37 @@ export default function Header({
             );
           })}
         </div>
+
+        {/* Predictions Trigger */}
+        <button
+          onClick={() => {
+            if (!user || user.status !== 'premium') {
+              onOpenModal('auth', 'premium');
+            } else {
+              onOpenModal('predictions', null);
+            }
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '6px 12px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--accent-emerald)',
+            borderRadius: '0',
+            color: 'var(--accent-emerald)',
+            cursor: 'pointer',
+            fontSize: '12px',
+            fontWeight: '700',
+            transition: 'all 0.2s ease',
+            whiteSpace: 'nowrap'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(13,240,163,0.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-card)'}
+        >
+          <TrendingUp size={14} />
+          Pronósticos
+        </button>
 
         {/* Custom Date Input Trigger */}
         <div style={{ position: 'relative' }}>
