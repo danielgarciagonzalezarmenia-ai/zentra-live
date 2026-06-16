@@ -64,6 +64,17 @@ export default function App() {
             };
             await setDoc(userDocRef, userData);
             setUser(userData);
+            
+            // Enviar correo de bienvenida
+            try {
+              await fetch(`${API_BASE_URL}/api/welcome_email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: currentUser.email, displayName: currentUser.displayName })
+              });
+            } catch (err) {
+              console.error("Error sending welcome email:", err);
+            }
           } else {
             let userData = userSnap.data();
             

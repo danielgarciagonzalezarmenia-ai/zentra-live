@@ -5,6 +5,7 @@ const { MercadoPagoConfig, Preference } = require('mercadopago');
 const admin = require('firebase-admin');
 const { getFirestore } = require('firebase-admin/firestore');
 const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 
 // ----------------------------------------------------
 // FIREBASE ADMIN SETUP (For updating user Premium status)
@@ -42,6 +43,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -58,8 +60,93 @@ const scrapeHeaders = {
 };
 
 // Health check endpoint for keeping server awake
-app.get('/ping', (req, res) => {
-  res.send('pong');
+app.get('/api/wakeup', (req, res) => {
+  res.status(200).send('Server is awake');
+});
+
+// Endpoint to send welcome email
+app.post('/api/welcome_email', async (req, res) => {
+  const { email, displayName } = req.body;
+  if (!email) return res.status(400).json({ error: 'Falta el correo.' });
+
+  try {
+    const mailOptions = {
+      from: `"ZENTRA" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: '¡Bienvenido a ZENTRA Live! ⚽',
+      html: `
+        <div style="font-family: Arial, sans-serif; background: #070a13; color: #ffffff; padding: 30px; text-align: center; border-radius: 12px;">
+          <h1 style="color: #0df0a3;">¡Hola ${displayName || ''}! Bienvenido a ZENTRA</h1>
+          <p style="font-size: 16px; color: #94a3b8; line-height: 1.6;">
+            Tu radar inteligente de estadísticas en vivo está listo.<br>
+            A partir de ahora tendrás acceso a la información en tiempo real más precisa para que no te pierdas ninguna tendencia u oportunidad matemática.
+          </p>
+          <a href="https://danielgarciagonzalezarmenia-ai.github.io/zentra-live/" style="display: inline-block; background: #0df0a3; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px;">
+            Ir al Radar
+          </a>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: 'Correo enviado' });
+  } catch (error) {
+    console.error('Error enviando correo de bienvenida:', error);
+    res.status(500).json({ error: 'Error al enviar el correo.' });
+  }
+});
+
+// ----------------------------------------------------
+// DAILY CRON JOB (8:00 AM BOGOTA)
+// ----------------------------------------------------
+cron.schedule('0 8 * * *', async () => {
+  console.log("Iniciando cron job de las 8:00 AM (Colombia)...");
+  if (!dbAdmin) {
+    console.error("No hay dbAdmin, no se pueden enviar correos a usuarios.");
+    return;
+  }
+
+  try {
+    const usersSnapshot = await dbAdmin.collection('users').get();
+    const emails = [];
+    usersSnapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.email) emails.push(data.email);
+    });
+
+    if (emails.length === 0) {
+      console.log("No hay usuarios para enviar correos.");
+      return;
+    }
+
+    // Dividimos en lotes pequeños si hay muchos (Gmail permite máx 500 al día)
+    // Para simplificar, enviamos todos en copia oculta
+    const mailOptions = {
+      from: `"ZENTRA" <${process.env.EMAIL_USER}>`,
+      bcc: emails.join(','),
+      subject: '⚽ ZENTRA: Las tendencias de hoy ya están disponibles',
+      html: `
+        <div style="font-family: Arial, sans-serif; background: #070a13; color: #ffffff; padding: 30px; text-align: center; border-radius: 12px;">
+          <h1 style="color: #0df0a3;">¡Buenos días! ☀️</h1>
+          <p style="font-size: 16px; color: #94a3b8; line-height: 1.6;">
+            El radar de ZENTRA ya ha detectado las mejores oportunidades matemáticas y tendencias para los partidos de hoy.<br><br>
+            Entra ahora y revisa las cuotas con mayor valor (+1.40) antes de que cambien.
+          </p>
+          <a href="https://danielgarciagonzalezarmenia-ai.github.io/zentra-live/" style="display: inline-block; background: #0df0a3; color: #000; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; margin-top: 20px;">
+            Ver Tendencias de Hoy
+          </a>
+        </div>
+      `
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Correos enviados exitosamente a ${emails.length} usuarios.`);
+  } catch (error) {
+    console.error("Error ejecutando el cron job diario:", error);
+  }
+}, {
+  scheduled: true,
+  timezone: "America/Bogota"
 });
 
 // 1. Get games by date
