@@ -145,11 +145,11 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
               <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
             </span>
             <span 
-              onClick={() => event.extraPlayers && event.extraPlayers[0] && onOpenModal('player', event.extraPlayers[0])}
-              style={{ cursor: event.extraPlayers && event.extraPlayers[0] ? 'pointer' : 'default' }}
-              className={event.extraPlayers && event.extraPlayers[0] ? 'hover-underline' : ''}
+              onClick={() => event.playerId && onOpenModal('player', event.playerId)}
+              style={{ cursor: 'pointer' }}
+              className="hover-underline"
             >
-              {extraPlayerName || 'Entra'}
+              {playerName || 'Entra'}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--danger)', fontWeight: '700' }}>
@@ -157,11 +157,11 @@ export default function TimelineTab({ events, members, homeId, awayId, gameDetai
               <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </span>
             <span 
-              onClick={() => event.playerId && onOpenModal('player', event.playerId)}
-              style={{ cursor: 'pointer' }}
-              className="hover-underline"
+              onClick={() => event.extraPlayers && event.extraPlayers[0] && onOpenModal('player', event.extraPlayers[0])}
+              style={{ cursor: event.extraPlayers && event.extraPlayers[0] ? 'pointer' : 'default' }}
+              className={event.extraPlayers && event.extraPlayers[0] ? 'hover-underline' : ''}
             >
-              {playerName || 'Sale'}
+              {extraPlayerName || 'Sale'}
             </span>
           </div>
         </div>
