@@ -347,26 +347,7 @@ export default function Header({
             En Vivo
           </button>
 
-          <button 
-            onClick={onRefresh}
-            disabled={loading}
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              border: '1px solid var(--border-color)',
-              background: 'transparent',
-              color: 'var(--text-secondary)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s ease'
-            }}
-            title="Actualizar partidos"
-          >
-            <RefreshCw size={16} className={loading ? 'skeleton' : ''} style={{ animation: loading ? 'skeleton-glow 1s infinite' : 'none' }} />
-          </button>
+
 
 
           {/* Firebase Authentication Area */}
@@ -655,17 +636,16 @@ export default function Header({
             display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'center',
-            padding: '20px'
           }}
         >
           <div 
             onClick={(e) => e.stopPropagation()}
             style={{
               background: 'var(--bg-secondary)',
-              padding: '24px',
-              borderRadius: '20px',
-              border: '1px solid var(--border-color)',
-              maxWidth: '400px',
+              padding: '24px 24px calc(24px + env(safe-area-inset-bottom)) 24px',
+              borderRadius: '24px 24px 0 0',
+              borderTop: '1px solid var(--border-color)',
+              maxWidth: '500px',
               width: '100%',
               textAlign: 'center',
               boxShadow: '0 -10px 40px rgba(0,0,0,0.5)',
