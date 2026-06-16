@@ -109,9 +109,7 @@ export default function Header({
       {/* Brand & Stats Button */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '12px', background: 'linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-cyan) 100%)', boxShadow: '0 0 15px rgba(13,240,163,0.3)' }}>
-            <Zap size={22} color="#0b0f19" style={{ strokeWidth: 2.5 }} />
-          </div>
+          <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ width: '40px', height: '40px', objectFit: 'contain' }} />
           <div>
             <h1 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.5px', background: 'linear-gradient(90deg, #ffffff 0%, var(--text-secondary) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
               ZENTRA
