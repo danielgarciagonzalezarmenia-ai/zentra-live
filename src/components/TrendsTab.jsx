@@ -44,7 +44,10 @@ export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }
     }
   };
 
-  if (!isPremium) {
+  const isFinished = game?.statusGroup === 4 || game?.statusText === 'FIN' || game?.statusText === 'Finalizado';
+  const isUnlocked = isPremium || isFinished;
+
+  if (!isUnlocked) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-50%', left: '-50%', width: '200%', height: '200%', background: 'radial-gradient(circle, var(--aura-emerald) 0%, transparent 50%)', opacity: 0.5, pointerEvents: 'none' }} />
