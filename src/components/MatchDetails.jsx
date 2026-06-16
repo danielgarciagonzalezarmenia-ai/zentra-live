@@ -222,7 +222,9 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                     gap: '6px'
                   }}>
                     {game.statusGroup === 3 && <span className="live-dot" style={{ width: '6px', height: '6px' }} />}
-                    {game.statusText || 'Programado'}
+                    {game.statusGroup === 3 && game.gameTime > 0 
+                      ? `${game.gameTime}'` 
+                      : (game.statusText || 'Programado')}
                   </span>
                 </div>
 
@@ -242,7 +244,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
         {/* Tab Selection Bar */}
         {gameDetails && !loading && (
           <div style={{ display: 'flex', justifyContent: 'center', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)', backdropFilter: 'var(--glass-blur)' }}>
-            <div style={{ display: 'flex', width: '100%', maxWidth: '800px' }}>
+            <div className="hide-scrollbar" style={{ display: 'flex', width: '100%', maxWidth: '800px', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               {[
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },
                 { id: 'lineup', name: 'Alineación Táctica', icon: <Users size={14} /> },
@@ -256,6 +258,8 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                     onClick={() => setActiveTab(tab.id)}
                     style={{
                       flex: 1,
+                      minWidth: '140px',
+                      flexShrink: 0,
                       padding: '16px 6px',
                       background: 'transparent',
                       border: 'none',
@@ -268,6 +272,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '8px',
+                      whiteSpace: 'nowrap',
                       transition: 'all 0.2s ease',
                       boxShadow: isSelected ? 'inset 0 -10px 10px -10px rgba(13,240,163,0.1)' : 'none'
                     }}

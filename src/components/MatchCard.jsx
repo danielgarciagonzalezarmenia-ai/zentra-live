@@ -17,7 +17,8 @@ export default function MatchCard({ game, competitionName, onClick }) {
   // Parse game time or start time
   const getGameTime = () => {
     if (isLive) {
-      return game.gameTimeDisplay || (game.gameTime > 0 ? `${game.gameTime}'` : 'Live');
+      if (game.gameTime > 0) return `${game.gameTime}'`;
+      return game.gameTimeDisplay || game.shortStatusText || 'En vivo';
     }
     if (isFinished) {
       if (game.statusText === 'Finalizado' || game.shortStatusText === 'Final' || game.shortStatusText === 'Fin') {

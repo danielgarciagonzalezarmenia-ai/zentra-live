@@ -3,15 +3,24 @@ import { TrendingUp, Award, ExternalLink, Percent, Lock, Loader2, Target, Zap, M
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import { getBestPick, evaluatePickStatus } from '../utils/predict';
+import { signInWithGoogle } from '../firebase';
 
 export default function TrendsTab({ trendsData, game, homeTeam, awayTeam, user }) {
   const isPremium = user?.isPremium;
   const [loadingPayment, setLoadingPayment] = useState(false);
 
   const handlePayment = async () => {
-    if (!user) {
-      alert("Debes iniciar sesión primero.");
-      return;
+    let currentUser = user;
+    if (!currentUser) {
+      try {
+        const result = await signInWithGoogle();
+        currentUser = result.user;
+        // La app principal detectará el cambio de auth y actualizará el estado
+        return; 
+      } catch (err) {
+        console.error("Error al iniciar sesión:", err);
+        return;
+      }
     }
     
     try {
