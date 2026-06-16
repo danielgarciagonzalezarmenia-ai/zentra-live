@@ -327,9 +327,9 @@ app.get('/api/competitor/:id/games', async (req, res) => {
   try {
     const today = new Date();
     
-    // Window 1: Past 35 days
+    // Window 1: Past 180 days
     const start1 = new Date(today);
-    start1.setDate(today.getDate() - 35);
+    start1.setDate(today.getDate() - 180);
     const end1 = new Date(today);
     end1.setDate(today.getDate() - 1);
     

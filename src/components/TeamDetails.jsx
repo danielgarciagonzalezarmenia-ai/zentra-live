@@ -3,7 +3,7 @@ import { Calendar, Users, Info } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
-export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
+export default function TeamDetails({ teamId, onClose, onClear, onOpenModal, isInline = false }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [teamMeta, setTeamMeta] = useState(null);
@@ -145,8 +145,8 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
 
   return (
     <>
-      <div className="drawer-overlay" onClick={onClear} />
-      <div className="drawer-content">
+      {!isInline && <div className="drawer-overlay" onClick={onClear} />}
+      <div className={isInline ? "" : "drawer-content"} style={isInline ? { width: '100%', height: '100%', display: 'flex', flexDirection: 'column' } : {}}>
         
         {/* Header */}
         <div style={{ 
@@ -210,7 +210,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                   src={getTeamLogo(teamId)} 
                   alt={competitor.name} 
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                  onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
                 />
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -345,7 +345,7 @@ export default function TeamDetails({ teamId, onClose, onClear, onOpenModal }) {
                                 src={getTeamLogo(opponent.id)} 
                                 alt={opponent.name} 
                                 style={{ width: '16px', height: '16px', objectFit: 'contain' }}
-                                onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
                               />
                               <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }}>
                                 {isHome ? 'vs' : '@'} <span className="hover-underline" onClick={(e) => { e.stopPropagation(); onOpenModal('team', opponent.id); }}>{opponent.name}</span>

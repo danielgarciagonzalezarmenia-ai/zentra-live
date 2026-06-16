@@ -22,6 +22,15 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Desktop layout detector
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 992);
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth > 992);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Theme State
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme');
@@ -358,77 +367,184 @@ export default function App() {
       />
 
       {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '0 16px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', boxSizing: 'border-box' }}>
-        <div style={{ width: '100%', maxWidth: '800px' }}>
-          {loading ? (
-            renderSkeletons()
-          ) : error ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', margin: '40px 16px', padding: '24px', textAlign: 'center' }} className="glass-panel">
-              <ShieldAlert size={40} color="var(--danger)" />
-              <span style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>{error}</span>
-              <button 
-                onClick={() => fetchData(true)}
-                style={{ padding: '8px 16px', border: '1px solid var(--accent-emerald)', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
-              >
-                Reintentar
-              </button>
-            </div>
-          ) : grouped.length === 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', margin: '40px 16px', padding: '40px 24px', textAlign: 'center' }} className="glass-panel">
-              <CalendarClock size={40} color="var(--text-muted)" />
-              <h3 style={{ fontSize: '18px', color: 'var(--text-primary)' }}>No hay partidos</h3>
-              <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                {filterLive ? 'No hay partidos en vivo jugando en este momento.' : 'No hay partidos programados para esta fecha.'}
-              </span>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {grouped.map(group => (
-                <div key={group.competition.id} style={{ marginBottom: '16px' }}>
-                  
-                  {/* League Header */}
-                  <div 
-                    onClick={() => openModal('league', group.competition.id)}
-                    style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '8px', 
-                      padding: '8px 8px', 
-                      marginBottom: '10px',
-                      cursor: 'pointer'
+      <main style={{ flex: 1, padding: '0 16px', display: 'flex', justifyContent: 'center', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ 
+          display: 'flex', 
+          width: '100%', 
+          maxWidth: isDesktop ? '1400px' : '800px', 
+          gap: '24px',
+          alignItems: 'flex-start'
+        }}>
+          
+          {/* Left Column - Match List */}
+          <div style={{ flex: isDesktop ? '0 0 45%' : '1 1 100%', maxWidth: isDesktop ? '600px' : '800px', display: 'flex', flexDirection: 'column' }}>
+            {/* Controles de Ligas (Solo se muestra el título Ligas Populares si está seleccionado, de lo contrario todo) */}
+            <div className="glass-panel" style={{ padding: '16px 20px', margin: '0 16px 16px 16px', display: 'flex', alignItems: 'center', gap: '12px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingRight: '12px', borderRight: '1px solid var(--border-color)', flexShrink: 0 }}>
+                <Trophy size={18} color="var(--accent-emerald)" />
+                <span style={{ fontSize: '12px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                  Ligas Populares
+                </span>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  onClick={() => setSelectedLeagueId(null)}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    border: selectedLeagueId === null ? '1px solid var(--accent-emerald)' : '1px solid transparent',
+                    background: selectedLeagueId === null ? 'rgba(13, 240, 163, 0.1)' : 'var(--bg-secondary)',
+                    color: selectedLeagueId === null ? 'var(--accent-emerald)' : 'var(--text-secondary)',
+                    fontSize: '12px',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  Todas
+                </button>
+                {competitions.map(comp => (
+                  <button
+                    key={comp.id}
+                    onClick={() => setSelectedLeagueId(comp.id)}
+                    style={{
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      border: selectedLeagueId === comp.id ? '1px solid var(--accent-emerald)' : '1px solid transparent',
+                      background: selectedLeagueId === comp.id ? 'rgba(13, 240, 163, 0.1)' : 'var(--bg-secondary)',
+                      color: selectedLeagueId === comp.id ? 'var(--accent-emerald)' : 'var(--text-secondary)',
+                      fontSize: '12px',
+                      fontWeight: '700',
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease'
                     }}
-                    className="league-header-click"
                   >
                     <img 
-                      src={getLeagueLogo(group.competition.id)} 
-                      alt={group.competition.name}
-                      style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-                      onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitions:default1.png/competitions/default1'; }}
+                      src={getLeagueLogo(comp.id)} 
+                      alt={comp.name}
+                      style={{ width: '14px', height: '14px', objectFit: 'contain' }}
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
-                    <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                      {group.competition.name}
-                    </h3>
+                    {comp.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Listado de Partidos */}
+            {loading ? (
+              renderSkeletons()
+            ) : error ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', margin: '40px 16px', padding: '24px', textAlign: 'center' }} className="glass-panel">
+                <ShieldAlert size={40} color="var(--danger)" />
+                <span style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>{error}</span>
+                <button 
+                  onClick={() => fetchData(true)}
+                  style={{ padding: '8px 16px', border: '1px solid var(--accent-emerald)', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
+                >
+                  Reintentar
+                </button>
+              </div>
+            ) : grouped.length === 0 ? (
+              <div style={{ padding: '60px 20px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+                <CalendarClock size={48} color="var(--border-color)" />
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  {filterLive ? 'No hay partidos en vivo jugando en este momento.' : 'No hay partidos programados para esta fecha.'}
+                </span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                {grouped.map(group => (
+                  <div key={group.competition.id} style={{ marginBottom: '16px' }}>
+                    
+                    {/* League Header */}
+                    <div 
+                      onClick={() => openModal('league', group.competition.id)}
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '8px', 
+                        padding: '8px 8px', 
+                        marginBottom: '10px',
+                        cursor: 'pointer'
+                      }}
+                      className="league-header-click"
+                    >
+                      <img 
+                        src={getLeagueLogo(group.competition.id)} 
+                        alt={group.competition.name}
+                        style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                      <h3 style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        {group.competition.name}
+                      </h3>
+                    </div>
+
+                    {/* Matches under this league */}
+                    {group.games.map(game => (
+                      <MatchCard 
+                        key={game.id} 
+                        game={game} 
+                        competitionName={group.competition.name}
+                        onClick={(id) => openModal('match', id)}
+                      />
+                    ))}
+
                   </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-                  {/* Matches under this league */}
-                  {group.games.map(game => (
-                    <MatchCard 
-                      key={game.id} 
-                      game={game} 
-                      competitionName={group.competition.name}
-                      onClick={(id) => openModal('match', id)}
-                    />
-                  ))}
-
+          {/* Right Column - Desktop Details */}
+          {isDesktop && (
+            <div style={{ 
+              flex: '1 1 55%', 
+              position: 'sticky', 
+              top: '24px', 
+              height: 'calc(100vh - 48px)', 
+              overflowY: 'auto',
+              borderRadius: '24px',
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-primary)',
+              scrollbarWidth: 'none'
+            }}>
+              {modalStack.length > 0 ? (() => {
+                const activeModal = modalStack[modalStack.length - 1];
+                switch (activeModal.type) {
+                  case 'match':
+                    return <MatchDetails matchId={activeModal.id} user={user} onClose={goBack} onClear={closeAll} onOpenModal={openModal} isInline={true} />;
+                  case 'league':
+                    return <LeagueDetails leagueId={activeModal.id} onClose={goBack} onClear={closeAll} onOpenModal={openModal} isInline={true} />;
+                  case 'team':
+                    return <TeamDetails teamId={activeModal.id} onClose={goBack} onClear={closeAll} onOpenModal={openModal} isInline={true} />;
+                  default:
+                    return null;
+                }
+              })() : (
+                <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                  <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ width: '120px', opacity: 0.1, marginBottom: '24px' }} />
+                  <h2 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-secondary)', marginBottom: '12px' }}>Selecciona un partido</h2>
+                  <p style={{ fontSize: '14px', lineHeight: '1.6', maxWidth: '300px' }}>
+                    Explora los partidos a la izquierda para ver estadísticas en vivo, alineaciones y tendencias de ZENTRA Premium.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           )}
+
         </div>
       </main>
 
-      {/* Modals Stack System */}
-      {modalStack.length > 0 && (() => {
+      {/* Modals Stack System - Only active on Mobile */}
+      {!isDesktop && modalStack.length > 0 && (() => {
         const activeModal = modalStack[modalStack.length - 1];
         switch (activeModal.type) {
           case 'match':

@@ -51,89 +51,66 @@ export default function MatchCard({ game, competitionName, onClick }) {
         cursor: 'pointer',
       }}
     >
-      {/* Team Info (Left/Right) & Scores */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-        <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+      {/* Horizontal Layout for Match Info */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', position: 'relative' }}>
+        <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'center' }}>
           {competitionName}
         </span>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          {/* Home Team */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img 
-                src={getTeamLogo(home.id)} 
-                alt={home.name} 
-                style={{ width: '24px', height: '24px', objectFit: 'contain' }}
-                onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
-              />
-              <span style={{ fontSize: '15px', fontWeight: home.isWinner ? '700' : '500', color: home.isWinner ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                {home.name}
-              </span>
-            </div>
-            {home.score !== -1 && (
-              <span style={{ fontSize: '16px', fontWeight: '800', color: home.isWinner ? 'var(--accent-emerald)' : 'var(--text-primary)' }}>
-                {home.score}
-              </span>
-            )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', width: '100%' }}>
+          
+          {/* Home Team (Left) */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', flex: 1, minWidth: 0 }}>
+            <span style={{ fontSize: '14px', fontWeight: home.isWinner ? '700' : '500', color: home.isWinner ? 'var(--text-primary)' : 'var(--text-secondary)', textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {home.name}
+            </span>
+            <img 
+              src={getTeamLogo(home.id)} 
+              alt={home.name} 
+              style={{ width: '28px', height: '28px', objectFit: 'contain', flexShrink: 0 }}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
           </div>
 
-          {/* Away Team */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img 
-                src={getTeamLogo(away.id)} 
-                alt={away.name} 
-                style={{ width: '24px', height: '24px', objectFit: 'contain' }}
-                onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
-              />
-              <span style={{ fontSize: '15px', fontWeight: away.isWinner ? '700' : '500', color: away.isWinner ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                {away.name}
-              </span>
-            </div>
-            {away.score !== -1 && (
-              <span style={{ fontSize: '16px', fontWeight: '800', color: away.isWinner ? 'var(--accent-emerald)' : 'var(--text-primary)' }}>
-                {away.score}
-              </span>
-            )}
+          {/* Center (Score or Time) */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minWidth: '70px', padding: '0 8px' }}>
+             {(isLive || isFinished) ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '18px', fontWeight: '800', color: isLive ? 'var(--accent-emerald)' : 'var(--text-primary)', fontFamily: "'Outfit', sans-serif" }}>
+                   <span>{home.score !== -1 ? home.score : '-'}</span>
+                   <span style={{ color: 'var(--text-muted)', fontSize: '14px', fontWeight: '500' }}>-</span>
+                   <span>{away.score !== -1 ? away.score : '-'}</span>
+                </div>
+             ) : (
+                <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)', fontFamily: "'Outfit', sans-serif" }}>
+                  {getGameTime()}
+                </div>
+             )}
+             
+             {isLive && (
+                <span style={{ fontSize: '10px', color: 'var(--accent-emerald)', fontWeight: '700', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span className="live-dot" style={{ width: '4px', height: '4px' }} />
+                  {getGameTime()}
+                </span>
+             )}
+             {isFinished && (
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '600', marginTop: '2px' }}>{getGameTime()}</span>
+             )}
           </div>
+
+          {/* Away Team (Right) */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px', flex: 1, minWidth: 0 }}>
+            <img 
+              src={getTeamLogo(away.id)} 
+              alt={away.name} 
+              style={{ width: '28px', height: '28px', objectFit: 'contain', flexShrink: 0 }}
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+            <span style={{ fontSize: '14px', fontWeight: away.isWinner ? '700' : '500', color: away.isWinner ? 'var(--text-primary)' : 'var(--text-secondary)', textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {away.name}
+            </span>
+          </div>
+
         </div>
-      </div>
-
-      {/* Match Clock / Time / Status Indicator (Right) */}
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'flex-end', 
-        justifyContent: 'center',
-        paddingLeft: '20px',
-        borderLeft: '1px solid var(--border-color)',
-        minWidth: '70px'
-      }}>
-        {isLive && (
-          <span style={{ 
-            fontSize: '9px', 
-            fontWeight: '800', 
-            color: 'var(--accent-emerald)', 
-            letterSpacing: '1px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '4px',
-            marginBottom: '4px',
-            textTransform: 'uppercase'
-          }}>
-            <span className="live-dot" />
-            Vivo
-          </span>
-        )}
-        <span style={{ 
-          fontSize: isLive ? '18px' : '14px', 
-          fontWeight: '800', 
-          color: isLive ? 'var(--accent-emerald)' : (isFinished ? 'var(--text-muted)' : 'var(--text-secondary)'),
-          fontFamily: "'Outfit', sans-serif"
-        }}>
-          {getGameTime()}
-        </span>
       </div>
     </div>
   );

@@ -146,9 +146,9 @@ export default function Header({
   const days = getDaysArray();
 
   return (
-    <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '800px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
+    <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '1200px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
       {/* Brand & Search */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', gap: '12px' }}>
         <div className="header-brand" style={{ display: 'flex', alignItems: 'center' }}>
           <img src="/images/favicon.png" alt="ZENTRA Logo" className="brand-logo" />
         </div>
@@ -238,7 +238,7 @@ export default function Header({
                             src={`https://imagecache.365scores.com/image/upload/f_auto,w_32,h_32,c_limit,q_auto:eco,d_competitions:default1.png/competitions/${comp.id}`} 
                             alt={comp.name} 
                             style={{ width: '14px', height: '14px', objectFit: 'contain' }}
-                            onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitions:default1.png/competitions/default1'; }}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                           />
                           <span className="hover-underline">{comp.name}</span>
                         </div>
@@ -261,7 +261,7 @@ export default function Header({
                             src={`https://imagecache.365scores.com/image/upload/f_auto,w_32,h_32,c_limit,q_auto:eco,d_competitors:default1.png/competitors/${team.id}`} 
                             alt={team.name} 
                             style={{ width: '14px', height: '14px', objectFit: 'contain' }}
-                            onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                           />
                           <span className="hover-underline">{team.name}</span>
                         </div>

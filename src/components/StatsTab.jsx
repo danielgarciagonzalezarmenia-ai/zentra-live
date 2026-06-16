@@ -1,97 +1,71 @@
 import React from 'react';
+import { Activity } from 'lucide-react';
 
 export default function StatsTab({ statsList, homeId, awayId }) {
-  if (!statsList || statsList.length === 0) {
+  
+  if (!statsList || statsList.length === 0 || !statsList[0].statistics) {
     return (
-      <div style={{ textAlign: 'center', padding: '40px 20px', color: 'var(--text-muted)' }}>
-        <p style={{ margin: 0, fontSize: '14px' }}>Estadísticas no disponibles para este partido.</p>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+        <Activity size={48} color="var(--border-color)" style={{ marginBottom: '16px' }} />
+        <h3 style={{ fontSize: '18px', color: 'var(--text-primary)', marginBottom: '8px' }}>Sin estadísticas</h3>
+        <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>Las estadísticas de este partido aún no están disponibles.</p>
       </div>
     );
   }
 
-  // Group stats by name to pair home and away values
-  const groupedMap = {};
-  statsList.forEach(item => {
-    const key = item.name;
-    if (!groupedMap[key]) {
-      groupedMap[key] = {
-        name: item.name,
-        homeValue: '0',
-        awayValue: '0',
-        homePercent: 0.5,
-        awayPercent: 0.5
-      };
-    }
-
-    // Convert values like "65%" or "4.22" to numbers for percentage bars
-    const cleanVal = item.value.replace('%', '');
-    const numVal = parseFloat(cleanVal) || 0;
-
-    if (item.competitorId === homeId) {
-      groupedMap[key].homeValue = item.value;
-      groupedMap[key].homePercent = item.valuePercentage !== undefined ? item.valuePercentage : numVal / 100;
-    } else if (item.competitorId === awayId) {
-      groupedMap[key].awayValue = item.value;
-      groupedMap[key].awayPercent = item.valuePercentage !== undefined ? item.valuePercentage : numVal / 100;
-    }
-  });
-
-  const stats = Object.values(groupedMap);
+  const statistics = statsList[0].statistics;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '16px' }}>
-      {stats.map((stat, idx) => {
-        // Calculate relative weights for the comparison bar
-        const total = (parseFloat(stat.homeValue) || 0) + (parseFloat(stat.awayValue) || 0);
-        let homeBarWidth = 50;
-        let awayBarWidth = 50;
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', background: 'var(--bg-card)', padding: '24px', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+      {statistics.map((stat, index) => {
+        // Extraer números si el valor viene como string con porcentaje (ej: "40%")
+        const cleanHomeVal = typeof stat.homeValue === 'string' ? stat.homeValue.replace('%', '') : stat.homeValue;
+        const cleanAwayVal = typeof stat.awayValue === 'string' ? stat.awayValue.replace('%', '') : stat.awayValue;
 
-        if (stat.homeValue.includes('%') || stat.awayValue.includes('%')) {
-          homeBarWidth = parseFloat(stat.homeValue) || 0;
-          awayBarWidth = parseFloat(stat.awayValue) || 0;
-        } else if (total > 0) {
-          homeBarWidth = ((parseFloat(stat.homeValue) || 0) / total) * 100;
-          awayBarWidth = ((parseFloat(stat.awayValue) || 0) / total) * 100;
+        const homeVal = parseFloat(cleanHomeVal) || 0;
+        const awayVal = parseFloat(cleanAwayVal) || 0;
+        const total = homeVal + awayVal;
+        
+        let homePercentage = 50;
+        let awayPercentage = 50;
+        
+        if (total > 0) {
+          homePercentage = (homeVal / total) * 100;
+          awayPercentage = (awayVal / total) * 100;
         }
 
+        const isHomeGreater = homeVal > awayVal;
+        const isAwayGreater = awayVal > homeVal;
+
         return (
-          <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {/* Stat Header (Home Value - Stat Name - Away Value) */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px', fontWeight: '700' }}>
-              <span style={{ color: 'var(--text-primary)', width: '40px', textAlign: 'left' }}>
+          <div key={index} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '14px', fontWeight: isHomeGreater ? '800' : '600', color: isHomeGreater ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
                 {stat.homeValue}
               </span>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '12px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 {stat.name}
               </span>
-              <span style={{ color: 'var(--text-primary)', width: '40px', textAlign: 'right' }}>
+              <span style={{ fontSize: '14px', fontWeight: isAwayGreater ? '800' : '600', color: isAwayGreater ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
                 {stat.awayValue}
               </span>
             </div>
-
-            {/* Custom Dual Progress Bar */}
-            <div style={{ height: '8px', background: 'var(--border-color)', borderRadius: '4px', display: 'flex', overflow: 'hidden', width: '100%' }}>
-              {/* Home Bar (Fills from right to left inside its half) */}
-              <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', borderRight: '1px solid var(--bg-secondary)' }}>
-                <div style={{ 
-                  width: `${homeBarWidth}%`, 
-                  height: '100%', 
-                  background: 'linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-emerald) 100%)',
-                  borderRadius: '4px 0 0 4px',
-                  transition: 'width 0.5s ease'
-                }} />
-              </div>
-              
-              {/* Away Bar (Fills from left to right inside its half) */}
-              <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
-                <div style={{ 
-                  width: `${awayBarWidth}%`, 
-                  height: '100%', 
-                  background: 'linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-blue) 100%)',
-                  borderRadius: '0 4px 4px 0',
-                  transition: 'width 0.5s ease'
-                }} />
-              </div>
+            
+            {/* Progress Bar Container */}
+            <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'var(--bg-secondary)' }}>
+              {/* Home Bar */}
+              <div style={{ 
+                width: `${homePercentage}%`, 
+                background: isHomeGreater ? 'var(--accent-emerald)' : 'var(--border-color)',
+                transition: 'width 0.5s ease',
+                borderRight: '2px solid var(--bg-card)'
+              }} />
+              {/* Away Bar */}
+              <div style={{ 
+                width: `${awayPercentage}%`, 
+                background: isAwayGreater ? 'var(--accent-emerald)' : 'var(--border-color)',
+                transition: 'width 0.5s ease'
+              }} />
             </div>
           </div>
         );

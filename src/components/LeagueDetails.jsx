@@ -3,7 +3,7 @@ import { Trophy, BarChart3, HelpCircle } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
-export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal }) {
+export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal, isInline = false }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [standingsData, setStandingsData] = useState(null);
@@ -98,8 +98,8 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
 
   return (
     <>
-      <div className="drawer-overlay" onClick={onClear} />
-      <div className="drawer-content">
+      {!isInline && <div className="drawer-overlay" onClick={onClear} />}
+      <div className={isInline ? "" : "drawer-content"} style={isInline ? { width: '100%', height: '100%', display: 'flex', flexDirection: 'column' } : {}}>
         
         {/* Header */}
         <div style={{ 
@@ -151,7 +151,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                 src={getLeagueLogo(leagueId)} 
                 alt={competition.name} 
                 style={{ width: '48px', height: '48px', objectFit: 'contain' }}
-                onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitions:default1.png/competitions/default1'; }}
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <h2 style={{ fontSize: '20px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
@@ -270,7 +270,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                                           src={getTeamLogo(row.competitor.id)} 
                                           alt={row.competitor.name} 
                                           style={{ width: '18px', height: '18px', objectFit: 'contain' }} 
-                                          onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                                          onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                         />
                                         <span className="hover-underline">{row.competitor.name}</span>
                                       </td>
@@ -328,7 +328,7 @@ export default function LeagueDetails({ leagueId, onClose, onClear, onOpenModal 
                                       src={getTeamLogo(row.competitor.id)} 
                                       alt={row.competitor.name} 
                                       style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-                                      onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }}
+                                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                     />
                                     <span className="hover-underline">{row.competitor.name}</span>
                                   </td>

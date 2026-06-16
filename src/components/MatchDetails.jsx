@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutList, Users, BarChart3, Target, Crosshair } from 'lucide-react';
+import { LayoutList, Users, BarChart3, Target, Crosshair, Activity } from 'lucide-react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import TimelineTab from './TimelineTab';
 import LineupPitch from './LineupPitch';
 import StatsTab from './StatsTab';
+import PreMatchStats from './PreMatchStats';
 import TrendsTab from './TrendsTab';
 import { db } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, user }) {
+export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, user, isInline = false }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gameDetails, setGameDetails] = useState(null);
   const [statsData, setStatsData] = useState(null);
   const [trendsData, setTrendsData] = useState(null);
-  const [activeTab, setActiveTab] = useState('timeline'); // 'timeline', 'lineup', 'stats'
+  const [activeTab, setActiveTab] = useState('timeline'); // 'timeline', 'lineup', 'stats', 'trends'
+  const [countdown, setCountdown] = useState('');
 
   useEffect(() => {
     if (!matchId) return;
@@ -108,6 +110,38 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
     return `https://imagecache.365scores.com/image/upload/f_auto,w_120,h_120,c_limit,q_auto:eco,d_competitors:default1.png/competitors/${id}`;
   };
 
+  useEffect(() => {
+    if (!gameDetails?.game?.startTime) return;
+    const game = gameDetails.game;
+    if (game.statusGroup !== 1 && game.statusGroup !== 2) {
+       setCountdown('');
+       return;
+    }
+
+    const interval = setInterval(() => {
+      const now = new Date();
+      const startTime = new Date(game.startTime);
+      const diff = startTime - now;
+      
+      if (diff <= 0) {
+        setCountdown('00:00:00');
+        clearInterval(interval);
+      } else {
+        const h = Math.floor(diff / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        // Show hours only if there are hours left
+        if (h > 0) {
+          setCountdown(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
+        } else {
+          setCountdown(`${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`);
+        }
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [gameDetails]);
+
   const game = gameDetails?.game;
   const home = game?.homeCompetitor;
   const away = game?.awayCompetitor;
@@ -115,10 +149,10 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
   return (
     <>
       {/* Background Overlay */}
-      <div className="drawer-overlay" onClick={onClose} />
+      {!isInline && <div className="drawer-overlay" onClick={onClose} />}
       
-      {/* Full Screen Modal Dashboard */}
-      <div className="drawer-content">
+      {/* Container (Modal or Inline) */}
+      <div className={isInline ? "" : "drawer-content"} style={isInline ? { width: '100%', height: '100%', display: 'flex', flexDirection: 'column' } : {}}>
         
         {/* Widescreen Header */}
         <div style={{ 
@@ -159,6 +193,7 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
             >
               ← Volver
             </button>
+            
             <button 
               onClick={onClear}
               style={{ 
@@ -195,17 +230,17 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                   <span style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }} className="hover-underline">{home.name}</span>
                 </div>
 
-                {/* Score */}
+                {/* Score or Countdown */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '120px' }}>
                   <div style={{ 
-                    fontSize: '40px', 
+                    fontSize: (countdown && home.score === -1) ? '28px' : '40px', 
                     fontWeight: '900', 
-                    letterSpacing: '6px', 
+                    letterSpacing: (countdown && home.score === -1) ? '2px' : '6px', 
                     color: 'var(--text-primary)', 
                     fontFamily: "'Outfit', sans-serif",
                     textShadow: '0 0 20px rgba(255,255,255,0.1)'
                   }}>
-                    {home.score !== -1 ? `${home.score} - ${away.score}` : 'vs'}
+                    {home.score !== -1 ? `${home.score} - ${away.score}` : (countdown || 'vs')}
                   </div>
                   <span style={{ 
                     fontSize: '11px', 
@@ -248,8 +283,8 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
               {[
                 { id: 'timeline', name: 'Resumen', icon: <LayoutList size={14} /> },
                 { id: 'lineup', name: 'Alineación Táctica', icon: <Users size={14} /> },
-                { id: 'trends', name: 'Radar de Valor', icon: <Target size={14} /> },
-                { id: 'stats', name: 'Estadísticas', icon: <BarChart3 size={14} /> }
+                { id: 'stats', name: 'Estadísticas', icon: <Activity size={14} /> },
+                { id: 'trends', name: 'Radar de Valor', icon: <BarChart3 size={14} /> }
               ].map(tab => {
                 const isSelected = activeTab === tab.id;
                 return (
@@ -311,6 +346,23 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
               {activeTab === 'lineup' && (
                 <LineupPitch gameDetails={gameDetails} onOpenModal={onOpenModal} />
               )}
+
+              {activeTab === 'stats' && (
+                <>
+                  {(game.statusGroup === 1 || game.statusGroup === 2) ? (
+                    <PreMatchStats 
+                      homeCompetitor={gameDetails?.game?.homeCompetitor} 
+                      awayCompetitor={gameDetails?.game?.awayCompetitor} 
+                    />
+                  ) : (
+                    <StatsTab 
+                      statsList={statsData?.statistics} 
+                      homeId={home.id} 
+                      awayId={away.id} 
+                    />
+                  )}
+                </>
+              )}
               
               {activeTab === 'trends' && (
                 <TrendsTab 
@@ -320,14 +372,6 @@ export default function MatchDetails({ matchId, onClose, onClear, onOpenModal, u
                   awayTeam={gameDetails?.awayCompetitor} 
                   user={user}
                   onOpenModal={onOpenModal}
-                />
-              )}
-              
-              {activeTab === 'stats' && (
-                <StatsTab 
-                  statsList={statsData?.statistics} 
-                  homeId={home.id} 
-                  awayId={away.id} 
                 />
               )}
             </div>

@@ -510,7 +510,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                           onClick={() => onOpenModal('team', club.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={getTeamLogo(club.id)} alt={club.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }} />
+                            <img src={getTeamLogo(club.id)} alt={club.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                               <span style={{ fontSize: '8px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Club</span>
                               <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }} className="hover-underline">{club.name}</strong>
@@ -527,7 +527,7 @@ export default function PlayerDetails({ playerId, onClose, onClear, onOpenModal 
                           onClick={() => onOpenModal('team', nationalTeam.id)}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <img src={getTeamLogo(nationalTeam.id)} alt={nationalTeam.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} onError={(e) => { e.target.src = 'https://imagecache.365scores.com/image/upload/d_competitors:default1.png/competitors/default1'; }} />
+                            <img src={getTeamLogo(nationalTeam.id)} alt={nationalTeam.name} style={{ width: '28px', height: '28px', objectFit: 'contain' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                               <span style={{ fontSize: '8px', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Selección</span>
                               <strong style={{ fontSize: '13px', color: 'var(--text-primary)' }} className="hover-underline">{nationalTeam.name}</strong>
