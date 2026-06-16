@@ -1,0 +1,21 @@
+{
+  "name": "ZENTRA Live",
+  "short_name": "ZENTRA",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#05070f",
+  "theme_color": "#05070f",
+  "description": "Tu radar inteligente de estadísticas de fútbol en vivo.",
+  "icons": [
+    {
+      "src": "/images/icono.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/icono.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
