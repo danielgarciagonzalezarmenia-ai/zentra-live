@@ -108,12 +108,13 @@ export default function Header({
     <header className="glass-panel" style={{ position: 'relative', zIndex: 50, margin: '16px auto', maxWidth: '800px', width: 'calc(100% - 32px)', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '16px', borderBottom: '1px solid var(--border-color)', boxSizing: 'border-box' }}>
       {/* Brand & Search */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="header-brand" style={{ display: 'flex', alignItems: 'center' }}>
           <img src="/images/favicon.png" alt="ZENTRA Logo" style={{ height: '70px', width: 'auto', maxWidth: '240px', objectFit: 'contain' }} />
         </div>
 
         {/* Search Engine */}
         <div 
+          className="header-search"
           style={{ position: 'relative', minWidth: '220px', flex: 1, maxWidth: '280px' }}
           onClick={(e) => e.stopPropagation()}
         >
@@ -258,7 +259,7 @@ export default function Header({
         </div>
 
         {/* Global Live Filter, Refresh & Auth */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div className="header-tools" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <button 
             onClick={() => setFilterLive(!filterLive)}
             style={{
