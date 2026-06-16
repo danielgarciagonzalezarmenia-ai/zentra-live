@@ -61,6 +61,7 @@ const scrapeHeaders = {
 
 // Health check endpoint for keeping server awake
 app.get('/api/wakeup', (req, res) => {
+  console.log('⏰ [WAKEUP] Ping recibido para mantener el servidor despierto.');
   res.status(200).send('Server is awake');
 });
 
