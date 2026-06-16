@@ -39,6 +39,11 @@
   box-sizing: border-box;
 }
 
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 :root[data-theme='dark'] {
   /* No changes needed, default is already dark */
 }
