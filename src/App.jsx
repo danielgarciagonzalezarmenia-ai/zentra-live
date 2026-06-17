@@ -195,8 +195,16 @@ export default function App() {
         checkForGoals(newGames);
       }
 
-      setGames(newGames);
-      setCompetitions(newCompetitions);
+      // Only update state if data actually changed, to prevent
+      // React re-rendering the entire list (which resets scroll position)
+      setGames(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(newGames)) return prev;
+        return newGames;
+      });
+      setCompetitions(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(newCompetitions)) return prev;
+        return newCompetitions;
+      });
       setError(null);
     } catch (err) {
       console.error('Error fetching matches:', err);
