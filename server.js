@@ -153,21 +153,86 @@ cron.schedule('0 8 * * *', async () => {
   timezone: "America/Bogota"
 });
 
+// ----------------------------------------------------
+// LIVE CACHE: Poll 365Scores every 10s, store in Firestore
+// ----------------------------------------------------
+function getTodayDateStr() {
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Bogota' }));
+  const d = String(now.getDate()).padStart(2, '0');
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const y = now.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+async function pollAndCacheLiveGames() {
+  if (!dbAdmin) return;
+  
+  const todayStr = getTodayDateStr();
+  try {
+    const url = `https://webws.365scores.com/web/games/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&startDate=${todayStr}&endDate=${todayStr}&_=${Date.now()}`;
+    const response = await axios.get(url, { headers: scrapeHeaders });
+    const data = response.data;
+
+    // Filter for football only (sportId === 1)
+    if (data.games) {
+      data.games = data.games.filter(g => g.sportId === 1);
+    }
+
+    // Write to Firestore - the document key is the date with slashes replaced
+    const docKey = todayStr.replace(/\//g, '-');
+    await dbAdmin.collection('live_cache').doc(docKey).set({
+      games: data.games || [],
+      competitions: data.competitions || [],
+      countries: data.countries || [],
+      lastUpdateId: data.lastUpdateId || null,
+      updatedAt: new Date().toISOString()
+    });
+
+    console.log(`[LIVE CACHE] Updated ${(data.games || []).length} games for ${todayStr}`);
+  } catch (err) {
+    console.error('[LIVE CACHE] Error polling:', err.message);
+  }
+}
+
+// Start polling every 10 seconds
+setInterval(pollAndCacheLiveGames, 10000);
+// Run immediately on startup
+pollAndCacheLiveGames();
+console.log('[LIVE CACHE] Started polling 365Scores every 10 seconds.');
+
 // 1. Get games by date
+// For today: serve from Firestore cache (instant). For other dates: hit 365Scores directly.
 app.get('/api/games', async (req, res) => {
   const { date } = req.query;
   if (!date) {
     return res.status(400).json({ error: 'Falta el parámetro de fecha (date=DD/MM/YYYY).' });
   }
 
+  const todayStr = getTodayDateStr();
+
+  // If requesting today's data AND we have Firestore, serve from cache
+  if (date === todayStr && dbAdmin) {
+    try {
+      const docKey = date.replace(/\//g, '-');
+      const docSnap = await dbAdmin.collection('live_cache').doc(docKey).get();
+      if (docSnap.exists) {
+        const cached = docSnap.data();
+        console.log(`[CACHE HIT] Serving ${(cached.games || []).length} cached games for ${date}`);
+        return res.json(cached);
+      }
+    } catch (cacheErr) {
+      console.error('[CACHE] Error reading cache, falling back to API:', cacheErr.message);
+    }
+  }
+
+  // Fallback: fetch directly from 365Scores (for non-today dates or if cache miss)
   try {
     const url = `https://webws.365scores.com/web/games/?appTypeId=5&langId=29&timezoneName=America/Bogota&userCountryId=1&startDate=${date}&endDate=${date}&_=${Date.now()}`;
-    console.log(`Fetching games for date: ${date}`);
+    console.log(`[API DIRECT] Fetching games for date: ${date}`);
     const response = await axios.get(url, { headers: scrapeHeaders });
 
     const data = response.data;
     if (data.games) {
-      // Filter for football (sportId === 1)
       data.games = data.games.filter(g => g.sportId === 1);
     }
     

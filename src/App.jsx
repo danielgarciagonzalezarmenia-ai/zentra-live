@@ -9,7 +9,7 @@ import confetti from 'canvas-confetti';
 import { ShieldAlert, CalendarClock, Trophy } from 'lucide-react';
 import { auth, db, googleProvider } from './firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { API_BASE_URL } from './config';
 
 export default function App() {
@@ -177,12 +177,11 @@ export default function App() {
     setSelectedDate(getTodayDateString());
   }, []);
 
-  const fetchData = async (showLoading = true) => {
+  // Fetch data from backend API (used for non-today dates)
+  const fetchDataFromAPI = async () => {
     if (!selectedDate) return;
-    if (showLoading) {
-      setLoading(true);
-      setError(null);
-    }
+    setLoading(true);
+    setError(null);
     try {
       const response = await axios.get(`${API_BASE_URL}/api/games?date=${selectedDate}&_=${Date.now()}`);
       const data = response.data;
@@ -190,47 +189,61 @@ export default function App() {
       const newGames = data.games || [];
       const newCompetitions = data.competitions || [];
 
-      // Check for goals to trigger confetti
-      if (selectedDate === getTodayDateString()) {
-        checkForGoals(newGames);
-      }
-
-      // Only update state if data actually changed, to prevent
-      // React re-rendering the entire list (which resets scroll position)
-      setGames(prev => {
-        if (JSON.stringify(prev) === JSON.stringify(newGames)) return prev;
-        return newGames;
-      });
-      setCompetitions(prev => {
-        if (JSON.stringify(prev) === JSON.stringify(newCompetitions)) return prev;
-        return newCompetitions;
-      });
+      setGames(newGames);
+      setCompetitions(newCompetitions);
       setError(null);
     } catch (err) {
       console.error('Error fetching matches:', err);
-      if (showLoading) {
-        setError('Ocurrió un error al obtener la lista de partidos.');
-      }
+      setError('Ocurrió un error al obtener la lista de partidos.');
     } finally {
-      if (showLoading) setLoading(false);
+      setLoading(false);
     }
   };
 
-  // Fetch games on date changes
+  // Main data effect: onSnapshot for today, API for other dates
   useEffect(() => {
-    fetchData(true);
-  }, [selectedDate]);
+    if (!selectedDate) return;
 
-  // Live polling every 15 seconds if today's date is selected
-  useEffect(() => {
-    if (!selectedDate || selectedDate !== getTodayDateString()) return;
+    const todayStr = getTodayDateString();
 
-    const interval = setInterval(() => {
-      console.log('Polling live scores...');
-      fetchData(false); // fetch silently without skeleton flash
-    }, 15000);
+    if (selectedDate === todayStr) {
+      // REAL-TIME from Firestore: listen to live_cache document
+      setLoading(true);
+      const docKey = selectedDate.replace(/\//g, '-');
+      const docRef = doc(db, 'live_cache', docKey);
+      
+      const unsubscribe = onSnapshot(docRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const cached = snapshot.data();
+          const newGames = cached.games || [];
+          const newCompetitions = cached.competitions || [];
 
-    return () => clearInterval(interval);
+          // Check for goals
+          checkForGoals(newGames);
+
+          // Only update if data changed (prevents scroll reset)
+          setGames(prev => {
+            if (JSON.stringify(prev) === JSON.stringify(newGames)) return prev;
+            return newGames;
+          });
+          setCompetitions(prev => {
+            if (JSON.stringify(prev) === JSON.stringify(newCompetitions)) return prev;
+            return newCompetitions;
+          });
+          setError(null);
+        }
+        setLoading(false);
+      }, (err) => {
+        console.error('Firestore onSnapshot error:', err);
+        // Fallback to API if Firestore fails
+        fetchDataFromAPI();
+      });
+
+      return () => unsubscribe();
+    } else {
+      // For non-today dates, fetch from API
+      fetchDataFromAPI();
+    }
   }, [selectedDate]);
 
   // Goal detector function
@@ -363,7 +376,7 @@ export default function App() {
         competitions={activeLeagues}
         selectedLeagueId={selectedLeagueId}
         setSelectedLeagueId={setSelectedLeagueId}
-        onRefresh={() => fetchData(true)}
+        onRefresh={() => fetchDataFromAPI()}
         loading={loading}
         onOpenModal={openModal}
         user={user}
@@ -454,7 +467,7 @@ export default function App() {
                 <ShieldAlert size={40} color="var(--danger)" />
                 <span style={{ fontSize: '15px', color: 'var(--text-secondary)' }}>{error}</span>
                 <button 
-                  onClick={() => fetchData(true)}
+                  onClick={() => fetchDataFromAPI()}
                   style={{ padding: '8px 16px', border: '1px solid var(--accent-emerald)', background: 'rgba(13,240,163,0.1)', color: 'var(--accent-emerald)', borderRadius: '0', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}
                 >
                   Reintentar
