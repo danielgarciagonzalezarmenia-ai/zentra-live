@@ -1,4 +1,4 @@
-const CACHE_NAME = 'zentra-pwa-v2';
+const CACHE_NAME = 'zentra-pwa-v3';
 const URLS_TO_CACHE = [
   '/',
   '/index.html',
